@@ -44,7 +44,7 @@
         'a.swap': Toggle.LinkBehavior({swap: true, effect: 'blind'}),
         'form input.checkbox.toggle': Toggle.CheckboxBehavior(),
         'form input.checkbox.inverted_toggle': Toggle.CheckboxBehavior({invert: true}),
-        'form input.radio.toggle': Toggle.RadioBehavior(),
+        'form .radio_group.toggle': Toggle.RadioGroupBehavior({effect: 'blind'}),
         'form select.toggle': Toggle.SelectBehavior()
       });
   %body
@@ -79,22 +79,31 @@
         .expand_me#four Expanded!
       
       %fieldset
-        %h3 Toggle.RadioBehavior
-        %p
-          %input.radio.toggle{:name=>"option", :id=>"option_1", :type=>"radio", :value=>"1", :checked=>true}/
-          %label.radio{:for=>"option_1"} Option 1
-        %p
-          %input.radio.toggle{:name=>"option", :id=>"option_2", :type=>"radio", :value=>"2", :rel=>"toggle[five]"}/
-          %label.radio{:for=>"option_2"} Option 2 (select to expand)
-        .expand_me#five Expanded!
+        %h3 Toggle.RadioGroupBehavior
+        .radio_group.toggle
+          %p
+            %input.radio{:name=>"option", :id=>"option_1", :type=>"radio", :value=>"1", :checked=>true}/
+            %label.radio{:for=>"option_1"} None
+          %p
+            %input.radio{:name=>"option", :id=>"option_2", :type=>"radio", :value=>"2", :rel=>"toggle[five]"}/
+            %label.radio{:for=>"option_2"} Expand One
+          .expand_me#five Expanded!
+          %p
+            %input.radio{:name=>"option", :id=>"option_3", :type=>"radio", :value=>"3", :rel=>"toggle[six,seven]"}/
+            %label.radio{:for=>"option_3"} Expand Two
+          .expand_me#six Expanded!  
+          .expand_me#seven Expanded!
+          %p
+            %input.radio{:name=>"option", :id=>"option_4", :type=>"radio", :value=>"4", :rel=>"toggle[five,six,seven]"}/
+            %label.radio{:for=>"option_4"} Expand All
       
       %fieldset
         %h3 Toggle.SelectBehavior
         %p
           %select.toggle{:name=>"select", :id=>"select"}
             %option &lt;select one&gt;
-            %option{:value=>"1", :rel=>"toggle[six]"} Option 1
-            %option{:value=>"2", :rel=>"toggle[seven]"} Option 2
-            %option{:value=>"1,2", :rel=>"toggle[six,seven]"} Both Options
-        .expand_me#six Expanded! Option 1 selected
-        .expand_me#seven Expanded! Option 2 selected
+            %option{:value=>"1", :rel=>"toggle[eight]"} Option 1
+            %option{:value=>"2", :rel=>"toggle[nine]"} Option 2
+            %option{:value=>"1,2", :rel=>"toggle[eight,nine]"} Both Options
+        .expand_me#eight Expanded! Option 1 selected
+        .expand_me#nine Expanded! Option 2 selected
