@@ -15,26 +15,75 @@
         form
           label
             display: block
+            &.checkbox, &.radio
+              display: inline
           input
             font-size: 100%
           fieldset
             background: #e5e5e5
-            border: none
-            border-top: 1px solid #ddd
-            border-bottom: 1px solid #ddd
-            padding: 0.5em 1.5em
+            border: 1px solid #ddd
+            padding: 5px 15px
+            margin: 1em 0
+            h3
+              border-bottom: 1px solid silver
+              padding-bottom: 2px
+              margin-top: 10px
           .expand_me
             border: 1px solid silver
             background: white
             padding: 1.5em 1em
+            margin-bottom: 1em
     :javascript
       Effect.DefaultOptions.duration = 0.25;
       Event.addBehavior({
-        'a.toggle': ToggleBehavior()
+        'a.toggle': Toggle.LinkBehavior(),
+        'form input.checkbox.toggle': Toggle.CheckboxBehavior(),
+        'form input.checkbox.inverted_toggle': Toggle.CheckboxBehavior({invert: true}),
+        'form input.radio.toggle': Toggle.RadioBehavior(),
+        'form select.toggle': Toggle.SelectBehavior()
       });
   %body
+    %h1 toggle.js
+    %p
+      toggle.js is designed to make it easy to unobtrusively create expanders
+      of various kinds with very little effort.
     %form
       %fieldset
+        %h3 Toggle.LinkBehavior
         %p
           %a.toggle{:href=>"#one"} Click to Expand
         .expand_me#one Expanded!
+      
+      %fieldset
+        %h3 Toggle.CheckboxBehavior
+        %p
+          %input.checkbox.toggle{:name=>"checkbox1", :id=>"checkbox1", :type=>"checkbox", :value=>"", :rel=>"toggle[two]"}/
+          %label.checkbox{:for=>"checkbox1"} Check me for more
+        .expand_me#two Expanded!
+      %fieldset
+        %h3 Toggle.CheckboxBehavior (inverted)
+        %p
+          %input.checkbox.inverted_toggle{:name=>"checkbox2", :id=>"checkbox2", :type=>"checkbox", :value=>"", :rel=>"toggle[three]"}/
+          %label.checkbox{:for=>"checkbox2"} Check me for less
+        .expand_me#three Expanded!
+      
+      %fieldset
+        %h3 Toggle.RadioBehavior
+        %p
+          %input.radio.toggle{:name=>"option", :id=>"option_1", :type=>"radio", :value=>"1", :checked=>true}/
+          %label.radio{:for=>"option_1"} Option 1
+        %p
+          %input.radio.toggle{:name=>"option", :id=>"option_2", :type=>"radio", :value=>"2", :rel=>"toggle[five]"}/
+          %label.radio{:for=>"option_2"} Option 2 (select to expand)
+        .expand_me#five Expanded!
+      
+      %fieldset
+        %h3 Toggle.SelectBehavior
+        %p
+          %select.toggle{:name=>"select", :id=>"select"}
+            %option &lt;select one&gt;
+            %option{:value=>"1", :rel=>"toggle[six]"} Option 1
+            %option{:value=>"2", :rel=>"toggle[seven]"} Option 2
+            %option{:value=>"1,2", :rel=>"toggle[six,seven]"} Both Options
+        .expand_me#six Expanded! Option 1 selected
+        .expand_me#seven Expanded! Option 2 selected
