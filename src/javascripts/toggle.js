@@ -1,10 +1,16 @@
-// Namespace
+// Toggle namespace object
 var Toggle = {
+  
+  // Returns everything after the first "#" character in a string. Used to
+  // extract an anchor from a URL.
   extractAnchor: function(string) {
     var matches = String(string).match(/\#(.+)$/);
     if (matches) return matches[1];
   },
   
+  // Returns the associated toggle elements in a string. For string
+  // "toggle[one,two,three]" it will return the elements with IDs of "one",
+  // "two", and "three".
   extractToggleObjects: function(string) {
     var matches = String(string).match(/^toggle\[(.+)\]$/);
     if (matches) {
@@ -19,41 +25,72 @@ var Toggle = {
 };
 
 // Allows a link to toggle the display of another element. Just set the href
-// of the link to the ID of the element you are toggling ("#toggle_me").
+// of the link to the ID of the element you are toggling ("#toggle_me"). If
+// the behavior is created with the "swap" option set to true, a link that
+// is visible will be hidden and a link that is hidden will be shown when the
+// associated element is shown (and vise-versa).
 Toggle.LinkBehavior = Behavior.create({
   initialize: function(options) {
     var options = options || {};
-    this.toggleElementID = Toggle.extractAnchor(this.element.href);
-    if (this.toggleElementID) {
-      this.toggleElement = $(this.toggleElementID);
+    this.toggleID = Toggle.extractAnchor(this.element.href);
+    if (this.toggleID) {
+      this.toggleElement = $(this.toggleID);
       // this is needed because it is required by the SlideDown effect
-      this.toggleElementWrapper = this.toggleElement.wrap($div({'class':'toggleWrapper', 'style':'display:none'}))
+      if ($(this.toggleElement.parentNode).hasClassName('toggle_wrapper')) {
+        this.toggleElementWrapper = $(this.toggleElement.parentNode);
+      } else {
+        this.toggleElementWrapper = this.toggleElement.wrap($div({'class':'toggle_wrapper', 'style':'display:none'}));
+      }
       this.effect = options.effect || 'slide';
       this.swap = options.swap;
-      if (this.swap) Toggle.swapLinks[this.toggleElementID] = this.element;
-      if (Toggle.extractAnchor(window.location) == this.toggleElementID) this.onclick();
+      this.element.behavior = this;
+      Toggle.addLink(this.toggleID, this.element)
     }
   },
   
   onclick: function() {
-    if (this.swap) this.element.hide();
+    this._hideLink();
     if (this.effect == 'pop') {
       this.toggleElementWrapper.toggle();
+      this._showLink();
     } else {
-      Effect.toggle(this.toggleElementWrapper, this.effect, {afterFinish: function() { this._swapInLink(); }.bind(this)});
+      Effect.toggle(
+        this.toggleElementWrapper,
+        this.effect,
+        { afterFinish: function() { this._showLink(); }.bind(this) }
+      );
     }
-    this._swapInLink();
     return false;
   },
   
-  _swapInLink: function() {
-    if (!this.swap) {
-      var link = Toggle.swapLinks[this.toggleElementID];
-      if (link) link.show();
+  _hideLink: function() {
+    if (this.swap) this.element.hide();
+  },
+  
+  _showLink: function() {
+    if (this.swap) {
+      var links = Toggle.links[this.toggleID];
+      links = links.reject(function(l) { return l == this.element }.bind(this));
+      links.invoke('show');
     }
   }
 });
-Toggle.swapLinks = {};
+Toggle.links = {};
+Toggle.addLink = function(id, element) {
+  this.links[id] = this.links[id] || $A();
+  this.links[id].push(element);
+}
+
+// Automatically open toogle a link if anchor is equal to the ID of the link's
+// associated object.
+Event.observe(window, 'dom:loaded', function() {
+  var anchor = Toggle.extractAnchor(window.location);
+  var links = Toggle.links[anchor];
+  if (links) {
+    var behavior = links.first().behavior;
+    behavior.onclick();
+  }
+});
 
 // Allows a the selection of a checkbox to toggle an element or group of
 // on and off elements. Just set the rel attribute to "toggle[id1,id2,...]"
@@ -116,7 +153,6 @@ Toggle.RadioBehavior = Behavior.create({
     this.toggleElements.invoke('hide');
   }
 });
-
 Toggle.RadioGroup = Class.create({
   initialize: function() {
     this.radioBehaviors = $A();
@@ -124,11 +160,7 @@ Toggle.RadioGroup = Class.create({
   
   addBehavior: function(behavior) {
     this.radioBehaviors.push(behavior);
-    this.installEventListeners(behavior.element);
-  },
-  
-  installEventListeners: function(radio) {
-    radio.observe('click', this.update.bind(this));
+    behavior.element.observe('click', this.update.bind(this));
   },
   
   update: function() {
@@ -145,8 +177,7 @@ Toggle.RadioGroup = Class.create({
 Toggle.radioGroups = {};
 
 // Allows you to toggle elements based on the selection of a combo box. Just
-// set the rel attribute to "toggle[id1,id2,...]"
-// on the each select option.
+// set the rel attribute to "toggle[id1,id2,...]" on the each select option.
 Toggle.SelectBehavior = Behavior.create({
   initialize: function() {
     var elements = $A();

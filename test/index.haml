@@ -37,6 +37,7 @@
       Effect.DefaultOptions.duration = 0.25;
       Event.addBehavior({
         'a.toggle': Toggle.LinkBehavior(),
+        'a.swap': Toggle.LinkBehavior({swap: true, effect: 'pop'}),
         'form input.checkbox.toggle': Toggle.CheckboxBehavior(),
         'form input.checkbox.inverted_toggle': Toggle.CheckboxBehavior({invert: true}),
         'form input.radio.toggle': Toggle.RadioBehavior(),
@@ -53,19 +54,25 @@
         %p
           %a.toggle{:href=>"#one"} Click to Expand
         .expand_me#one Expanded!
+      %fieldset
+        %h3 Toggle.LinkBehavior (swap)
+        %p
+          %a.swap{:href=>"#two"} Click to Open
+          %a.swap{:href=>"#two", :style=>"display: none"} Click to Close
+        .expand_me#two Expanded!
       
       %fieldset
         %h3 Toggle.CheckboxBehavior
         %p
-          %input.checkbox.toggle{:name=>"checkbox1", :id=>"checkbox1", :type=>"checkbox", :value=>"", :rel=>"toggle[two]"}/
+          %input.checkbox.toggle{:name=>"checkbox1", :id=>"checkbox1", :type=>"checkbox", :value=>"", :rel=>"toggle[three]"}/
           %label.checkbox{:for=>"checkbox1"} Check me for more
-        .expand_me#two Expanded!
+        .expand_me#three Expanded!
       %fieldset
         %h3 Toggle.CheckboxBehavior (inverted)
         %p
-          %input.checkbox.inverted_toggle{:name=>"checkbox2", :id=>"checkbox2", :type=>"checkbox", :value=>"", :rel=>"toggle[three]"}/
+          %input.checkbox.inverted_toggle{:name=>"checkbox2", :id=>"checkbox2", :type=>"checkbox", :value=>"", :rel=>"toggle[four]"}/
           %label.checkbox{:for=>"checkbox2"} Check me for less
-        .expand_me#three Expanded!
+        .expand_me#four Expanded!
       
       %fieldset
         %h3 Toggle.RadioBehavior

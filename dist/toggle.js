@@ -33,63 +33,106 @@
  *
  */
 
-Object.extend(String.prototype, {
-  anchorId: function() {
-    var matches = this.match(/\#(.+)$/);
+// Toggle namespace object
+var Toggle = {
+  
+  // Returns everything after the first "#" character in a string. Used to
+  // extract an anchor from a URL.
+  extractAnchor: function(string) {
+    var matches = String(string).match(/\#(.+)$/);
     if (matches) return matches[1];
+  },
+  
+  // Returns the associated toggle elements in a string. For string
+  // "toggle[one,two,three]" it will return the elements with IDs of "one",
+  // "two", and "three".
+  extractToggleObjects: function(string) {
+    var matches = String(string).match(/^toggle\[(.+)\]$/);
+    if (matches) {
+      var ids = matches[1].split(',');
+      var elements = [];
+      ids.each(function(id) { elements.push($(id)) });
+      return elements;
+    } else {
+      return [];
+    }
   }
-});
+};
 
 // Allows a link to toggle the display of another element. Just set the href
-// of the link to the ID of the element you are toggling ("#toggle_me").
-ToggleBehavior = Behavior.create({
+// of the link to the ID of the element you are toggling ("#toggle_me"). If
+// the behavior is created with the "swap" option set to true, a link that
+// is visible will be hidden and a link that is hidden will be shown when the
+// associated element is shown (and vise-versa).
+Toggle.LinkBehavior = Behavior.create({
   initialize: function(options) {
     var options = options || {};
-    this.toggleElementID = this.element.href.anchorId();
-    if (this.toggleElementID) {
-      this.toggleElement = $(this.toggleElementID);
+    this.toggleID = Toggle.extractAnchor(this.element.href);
+    if (this.toggleID) {
+      this.toggleElement = $(this.toggleID);
       // this is needed because it is required by the SlideDown effect
-      this.toggleElementWrapper = this.toggleElement.wrap($div({'class':'toggleWrapper', 'style':'display:none'}))
+      if ($(this.toggleElement.parentNode).hasClassName('toggle_wrapper')) {
+        this.toggleElementWrapper = $(this.toggleElement.parentNode);
+      } else {
+        this.toggleElementWrapper = this.toggleElement.wrap($div({'class':'toggle_wrapper', 'style':'display:none'}));
+      }
       this.effect = options.effect || 'slide';
       this.swap = options.swap;
-      if (this.swap) ToggleBehavior.swapLinks[this.toggleElementID] = this.element;
-      if (String(window.location).anchorId() == this.toggleElementID) this.onclick();
+      this.element.behavior = this;
+      Toggle.addLink(this.toggleID, this.element)
     }
   },
   
   onclick: function() {
-    if (this.swap) this.element.hide();
+    this._hideLink();
     if (this.effect == 'pop') {
       this.toggleElementWrapper.toggle();
+      this._showLink();
     } else {
-      Effect.toggle(this.toggleElementWrapper, this.effect, {afterFinish: function() { this._swapInLink(); }.bind(this)});
+      Effect.toggle(
+        this.toggleElementWrapper,
+        this.effect,
+        { afterFinish: function() { this._showLink(); }.bind(this) }
+      );
     }
-    this._swapInLink();
     return false;
   },
   
-  _swapInLink: function() {
-    if (!this.swap) {
-      var link = ToggleBehavior.swapLinks[this.toggleElementID];
-      if (link) link.show();
+  _hideLink: function() {
+    if (this.swap) this.element.hide();
+  },
+  
+  _showLink: function() {
+    if (this.swap) {
+      var links = Toggle.links[this.toggleID];
+      links = links.reject(function(l) { return l == this.element }.bind(this));
+      links.invoke('show');
     }
   }
 });
-ToggleBehavior.swapLinks = {};
+Toggle.links = {};
+Toggle.addLink = function(id, element) {
+  this.links[id] = this.links[id] || $A();
+  this.links[id].push(element);
+}
+
+// Automatically open toogle a link if anchor is equal to the ID of the link's
+// associated object.
+Event.observe(window, 'dom:loaded', function() {
+  var anchor = Toggle.extractAnchor(window.location);
+  var links = Toggle.links[anchor];
+  if (links) {
+    var behavior = links.first().behavior;
+    behavior.onclick();
+  }
+});
 
 // Allows a the selection of a checkbox to toggle an element or group of
-// on and off elements. Just set the toggle_id or toggle_ids attribute on
-// the checkbox.
-CheckboxToggleBehavior = Behavior.create({
+// on and off elements. Just set the rel attribute to "toggle[id1,id2,...]"
+// on the checkbox.
+Toggle.CheckboxBehavior = Behavior.create({
   initialize: function(options) {
-    var idsAttr = this.element.attributes['toggle_ids'];
-    var idAttr = this.element.attributes['toggle_id'];
-    
-    var elements = $A([]);
-    if (idAttr) elements.push($(idAttr.value));
-    if (idsAttr) $A(idsAttr.value.split(',')).each(function(id) { elements.push($(id)) });
-    
-    this.toggleElements = elements;
+    this.toggleElements = Toggle.extractToggleObjects(this.element.readAttribute('rel'));
     this.options = options || {};
     this.update();
   },
@@ -115,26 +158,26 @@ CheckboxToggleBehavior = Behavior.create({
 });
 
 // Allows a the selection of a radio button to toggle an element or group of
-// elements on and off. Just set the toggle_id or toggle_ids attribute on
-// the radio button.
-RadioToggleBehavior = Behavior.create({
+// elements on and off. Just set the rel attribute to "toggle[id1,id2,...]"
+// on the radio button.
+Toggle.RadioBehavior = Behavior.create({
   initialize: function() {
-    var ids = this.element.readAttribute('toggle_ids');
-    var id = this.element.readAttribute('toggle_id');
     var groupName = this.element.readAttribute('name');
     
-    var elements = $A([]);
-    if (id) elements.push($(id));
-    if (ids) $A(ids.value.split(',')).each(function(id) { elements.push($(id)) });
-    
-    this.toggleElements = elements;
+    this.toggleElements = Toggle.extractToggleObjects(this.element.readAttribute('rel'));
     
     if (groupName) {
-      if (!RadioToggleGroup.groups[groupName]) RadioToggleGroup.groups[groupName] = new RadioToggleGroup;
-      RadioToggleGroup.groups[groupName].addBehavior(this);
+      if (!Toggle.radioGroups[groupName]) Toggle.radioGroups[groupName] = new Toggle.RadioGroup;
+      Toggle.radioGroups[groupName].addBehavior(this);
     }
     
     this.groupName = groupName;
+    
+    if (this.checked) {
+      this.showElements();
+    } else {
+      this.hideElements();
+    }
   },
   
   showElements: function() {
@@ -145,19 +188,14 @@ RadioToggleBehavior = Behavior.create({
     this.toggleElements.invoke('hide');
   }
 });
-
-RadioToggleGroup = Class.create({
+Toggle.RadioGroup = Class.create({
   initialize: function() {
     this.radioBehaviors = $A();
   },
   
   addBehavior: function(behavior) {
     this.radioBehaviors.push(behavior);
-    this.installEventListeners(behavior.element);
-  },
-  
-  installEventListeners: function(radio) {
-    radio.observe('click', this.update.bind(this));
+    behavior.element.observe('click', this.update.bind(this));
   },
   
   update: function() {
@@ -171,25 +209,18 @@ RadioToggleGroup = Class.create({
     });
   }
 });
-Object.extend(RadioToggleGroup, {
-  groups: {}
-});
-
+Toggle.radioGroups = {};
 
 // Allows you to toggle elements based on the selection of a combo box. Just
-// set the toggle_id or toggle_ids attribute on the combo box.
-SelectToggleBehavior = Behavior.create({
+// set the rel attribute to "toggle[id1,id2,...]" on the each select option.
+Toggle.SelectBehavior = Behavior.create({
   initialize: function() {
-    var match = String(window.location).anchorId();
-    if (match) {
-      var combo = this.element;
-      $A(combo.options).each(function(option, index) {
-        var attribute = option.attributes['toggle_ids'];
-        if (!attribute) attribute = option.attributes['toggle_id'];
-        if (attribute && attribute.value.match(match)) combo.selectedIndex = index;
-      });
-    }
-    this.lastShown = $A();
+    var elements = $A();
+    var options = this.element.select('option');
+    options.each(function(option) {
+      elements.push(Toggle.extractToggleObjects(option.readAttribute('rel')))
+    });
+    this.toggleElements = elements.flatten().uniq();
     this.updateSelection();
   },
   
@@ -200,22 +231,8 @@ SelectToggleBehavior = Behavior.create({
   updateSelection: function() {
     var combo = this.element;
     var option = $(combo.options[combo.selectedIndex]);
-    var attributes = option.readAttribute('toggle_ids');
-    if (!attributes) attributes = option.readAttribute('toggle_id');
-    
-    if (this.lastShown.length != 0) {
-      this.lastShown.each(Element.hide);
-      this.lastShown.clear();
-    }
-    if (attributes) {
-      attributes = attributes.split(",");
-      attributes.each(function(attribute) {
-        var element = $(attribute);
-        if (element) {
-          this.lastShown.push(element);
-          element.show();
-        }
-      }.bind(this));
-    }
+    var elements = Toggle.extractToggleObjects(option.readAttribute('rel'));
+    this.toggleElements.invoke('hide');
+    elements.invoke('show');
   }
 });
