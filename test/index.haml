@@ -24,6 +24,9 @@
             border: 1px solid #ddd
             padding: 5px 15px
             margin: 1em 0
+            border-radius: 5px
+            -moz-border-radius: 5px
+            -webkit-border-raidus: 5px
             h3
               border-bottom: 1px solid silver
               padding-bottom: 2px
@@ -33,11 +36,12 @@
             background: white
             padding: 1.5em 1em
             margin-bottom: 1em
+          #one, #two
+            margin-bottom: 0
     :javascript
-      Effect.DefaultOptions.duration = 0.25;
       Event.addBehavior({
         'a.toggle': Toggle.LinkBehavior(),
-        'a.swap': Toggle.LinkBehavior({swap: true, effect: 'pop'}),
+        'a.swap': Toggle.LinkBehavior({swap: true, effect: 'blind'}),
         'form input.checkbox.toggle': Toggle.CheckboxBehavior(),
         'form input.checkbox.inverted_toggle': Toggle.CheckboxBehavior({invert: true}),
         'form input.radio.toggle': Toggle.RadioBehavior(),
@@ -51,27 +55,27 @@
     %form
       %fieldset
         %h3 Toggle.LinkBehavior
+        .expand_me#one Expanded!
         %p
           %a.toggle{:href=>"#one"} Click to Expand
-        .expand_me#one Expanded!
       %fieldset
         %h3 Toggle.LinkBehavior (swap)
+        .expand_me#two Expanded!
         %p
           %a.swap{:href=>"#two"} Click to Open
           %a.swap{:href=>"#two", :style=>"display: none"} Click to Close
-        .expand_me#two Expanded!
       
       %fieldset
         %h3 Toggle.CheckboxBehavior
         %p
           %input.checkbox.toggle{:name=>"checkbox1", :id=>"checkbox1", :type=>"checkbox", :value=>"", :rel=>"toggle[three]"}/
-          %label.checkbox{:for=>"checkbox1"} Check me for more
+          %label.checkbox{:for=>"checkbox1"} Check for more
         .expand_me#three Expanded!
       %fieldset
         %h3 Toggle.CheckboxBehavior (inverted)
         %p
           %input.checkbox.inverted_toggle{:name=>"checkbox2", :id=>"checkbox2", :type=>"checkbox", :value=>"", :rel=>"toggle[four]"}/
-          %label.checkbox{:for=>"checkbox2"} Check me for less
+          %label.checkbox{:for=>"checkbox2"} Check for less
         .expand_me#four Expanded!
       
       %fieldset
