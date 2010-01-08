@@ -40,7 +40,7 @@ var Toggle = {
   DefaultEffectDuration: 0.25,
   
   // Utility function. Returns everything after the first "#" character in a
-  // string. Used to extract an anchor from a URL.
+  // string. Used to extract the anchor from a URL.
   extractAnchor: function(string) {
     var matches = String(string).match(/\#(.+)$/);
     if (matches) return matches[1];
@@ -196,8 +196,7 @@ Toggle.CheckboxBehavior = Behavior.create({
   },
   
   update: function() {
-    var method = null;
-    var formElementMethod = null;
+    var method, formElementMethod;
     if (this.invert) {
       method = this.element.checked ? 'hide' : 'show';
       formElementMethod = this.element.checked ? 'disable' : 'enable';
@@ -212,72 +211,59 @@ Toggle.CheckboxBehavior = Behavior.create({
   }
 });
 
-// Allows a the selection of a radio button to toggle an element or group of
-// elements on and off. Just set the <tt>rel</tt> attribute to
-// "toggle[id1,id2,...]" on the radio button.
+// Allows you to toggle elements based on the selection of a group of radio
+// buttons. Just set the <tt>rel</tt> attribute to "toggle[id1,id2,...]" on
+// each radio button. Radio buttons must be grouped inside a containing
+// element to which the behavior is applied.
 // 
 // *Options*
 // 
-// invert  :  When set to true the associated element is hidden when checked.
 // effect  :  This option specifies the effect that should be used when
 //            toggling. The default is "slide", but it can also be set to
 //            "blind", "appear", or "none".
-Toggle.RadioBehavior = Behavior.create({
+Toggle.RadioGroupBehavior = Behavior.create({
   initialize: function(options) {
     var options = options || {};
     
-    var groupName = this.element.readAttribute('name');
+    this.radioButtons = this.element.select('input[type=radio]');
     
-    this.toggleElements = Toggle.extractToggleObjects(this.element.readAttribute('rel'));
-    this.toggleWrappers = this.toggleElements.map(function(e) { return Toggle.wrapElement(e) });
+    this.toggleWrapperIDs = $A();
+    this.toggleWrapperIDsFor = {};
     
-    if (groupName) {
-      if (!Toggle.radioGroups[groupName]) Toggle.radioGroups[groupName] = new Toggle.RadioGroup;
-      Toggle.radioGroups[groupName].addBehavior(this);
-    }
+    this.radioButtons.each(function(radioButton) {
+      var elements = Toggle.extractToggleObjects(radioButton.readAttribute('rel'))
+      var ids = elements.invoke('identify');
+      var wrapperIDs = elements.map(function(e) { return Toggle.wrapElement(e) }).invoke('identify');
+      this.toggleWrapperIDsFor[radioButton.identify()] = wrapperIDs;
+      this.toggleWrapperIDs.push(wrapperIDs);
+      radioButton.observe('click', this.onRadioButtonClick.bind(this));
+    }.bind(this));
     
-    this.groupName = groupName;
-    
+    this.toggleWrapperIDs = this.toggleWrapperIDs.flatten().uniq()
     
     this.effect = "none";
-    if (this.checked) {
-      this.showElements();
-    } else {
-      this.hideElements();
-    }
+    this.update();
     this.effect = options.effect || Toggle.DefaultEffect;
   },
   
-  showElements: function() {
-    this.toggleWrappers.each(function(e) { Toggle.show(e, this.effect) }.bind(this));
-  },
-  
-  hideElements: function() {
-    this.toggleWrappers.each(function(e) { Toggle.hide(e, this.effect) }.bind(this));
-  }
-});
-Toggle.RadioGroup = Class.create({
-  initialize: function() {
-    this.radioBehaviors = $A();
-  },
-  
-  addBehavior: function(behavior) {
-    this.radioBehaviors.push(behavior);
-    behavior.element.observe('click', this.update.bind(this));
+  onRadioButtonClick: function(event) {
+    this.update();
   },
   
   update: function() {
-    this.radioBehaviors.each(function(behavior) {
-      var radio = behavior.element;
-      if (radio.checked) {
-        behavior.showElements();
+    var group = this.element;
+    var radioButton = this.radioButtons.find(function(b) { return b.checked });
+    var wrapperIDs = this.toggleWrapperIDsFor[radioButton.identify()];
+    this.toggleWrapperIDs.each(function(id) {
+      if (wrapperIDs.include(id)) {
+        Toggle.show(id, this.effect);
       } else {
-        behavior.hideElements();
+        Toggle.hide(id, this.effect);
       }
-    });
+    }.bind(this));
   }
 });
-Toggle.radioGroups = {};
+
 
 // Allows you to toggle elements based on the selection of a combo box. Just
 // set the <tt>rel</tt> attribute to "toggle[id1,id2,...]" on the each select
@@ -296,34 +282,28 @@ Toggle.SelectBehavior = Behavior.create({
     
     // For some reason, this behavior needs to use IDs for the comparisons
     // to work correctly.
-    this.toggleElementIDs = $A();
     this.toggleWrapperIDs = $A();
-    this.toggleElementIDsFor = {}
     this.toggleWrapperIDsFor = {};
     
     optionElements.each(function(optionElement) {
       var elements = Toggle.extractToggleObjects(optionElement.readAttribute('rel'))
-      var ids = elements.invoke('identify');
       var wrapperIDs = elements.map(function(e) { return Toggle.wrapElement(e) }).invoke('identify');
-      this.toggleElementIDsFor[optionElement.identify()] = ids;
       this.toggleWrapperIDsFor[optionElement.identify()] = wrapperIDs;
-      this.toggleElementIDs.push(ids);
       this.toggleWrapperIDs.push(wrapperIDs);
     }.bind(this));
     
-    this.toggleElementIDs = this.toggleElementIDs.flatten().uniq();
     this.toggleWrapperIDs = this.toggleWrapperIDs.flatten().uniq()
     
     this.effect = "none";
-    this.updateSelection();
+    this.update();
     this.effect = options.effect || Toggle.DefaultEffect;
   },
   
   onchange: function(event) {
-    this.updateSelection();
+    this.update();
   },
   
-  updateSelection: function() {
+  update: function() {
     var combo = this.element;
     var option = $(combo.options[combo.selectedIndex]);
     var wrapperIDs = this.toggleWrapperIDsFor[option.identify()];

@@ -36,7 +36,7 @@
             background: white
             padding: 1.5em 1em
             margin-bottom: 1em
-          #one, #two
+          #one,  #two, #seven, #nine
             margin-bottom: 0
     :javascript
       Event.addBehavior({
@@ -49,9 +49,6 @@
       });
   %body
     %h1 toggle.js
-    %p
-      toggle.js is designed to make it easy to unobtrusively create expanders
-      of various kinds with very little effort.
     %form
       %fieldset
         %h3 Toggle.LinkBehavior
@@ -71,12 +68,18 @@
           %input.checkbox.toggle{:name=>"checkbox1", :id=>"checkbox1", :type=>"checkbox", :value=>"", :rel=>"toggle[three]"}/
           %label.checkbox{:for=>"checkbox1"} Check for more
         .expand_me#three Expanded!
+        -# Still seem to be having trouble with this:
+        -# %p
+        -#   %input.checkbox.toggle{:name=>"checkbox2", :id=>"checkbox2", :type=>"checkbox", :value=>"", :rel=>"toggle[four,five]"}/
+        -#   %label.checkbox{:for=>"checkbox2"} Check for even more
+        -# .expand_me#four Expanded! 4
+        -# .expand_me#five Expanded! 5
       %fieldset
         %h3 Toggle.CheckboxBehavior (inverted)
         %p
-          %input.checkbox.inverted_toggle{:name=>"checkbox2", :id=>"checkbox2", :type=>"checkbox", :value=>"", :rel=>"toggle[four]"}/
-          %label.checkbox{:for=>"checkbox2"} Check for less
-        .expand_me#four Expanded!
+          %input.checkbox.inverted_toggle{:name=>"checkbox3", :id=>"checkbox3", :type=>"checkbox", :value=>"", :rel=>"toggle[six]"}/
+          %label.checkbox{:for=>"checkbox3"} Check for less
+        .expand_me#six Expanded!
       
       %fieldset
         %h3 Toggle.RadioGroupBehavior
@@ -85,16 +88,16 @@
             %input.radio{:name=>"option", :id=>"option_1", :type=>"radio", :value=>"1", :checked=>true}/
             %label.radio{:for=>"option_1"} None
           %p
-            %input.radio{:name=>"option", :id=>"option_2", :type=>"radio", :value=>"2", :rel=>"toggle[five]"}/
+            %input.radio{:name=>"option", :id=>"option_2", :type=>"radio", :value=>"2", :rel=>"toggle[seven]"}/
             %label.radio{:for=>"option_2"} Expand One
-          .expand_me#five Expanded!
-          %p
-            %input.radio{:name=>"option", :id=>"option_3", :type=>"radio", :value=>"3", :rel=>"toggle[six,seven]"}/
-            %label.radio{:for=>"option_3"} Expand Two
-          .expand_me#six Expanded!  
           .expand_me#seven Expanded!
           %p
-            %input.radio{:name=>"option", :id=>"option_4", :type=>"radio", :value=>"4", :rel=>"toggle[five,six,seven]"}/
+            %input.radio{:name=>"option", :id=>"option_3", :type=>"radio", :value=>"3", :rel=>"toggle[eight,nine]"}/
+            %label.radio{:for=>"option_3"} Expand Two
+          .expand_me#eight Expanded!  
+          .expand_me#nine Expanded!
+          %p
+            %input.radio{:name=>"option", :id=>"option_4", :type=>"radio", :value=>"4", :rel=>"toggle[seven,eight,nine]"}/
             %label.radio{:for=>"option_4"} Expand All
       
       %fieldset
@@ -102,8 +105,8 @@
         %p
           %select.toggle{:name=>"select", :id=>"select"}
             %option &lt;select one&gt;
-            %option{:value=>"1", :rel=>"toggle[eight]"} Option 1
-            %option{:value=>"2", :rel=>"toggle[nine]"} Option 2
-            %option{:value=>"1,2", :rel=>"toggle[eight,nine]"} Both Options
-        .expand_me#eight Expanded! Option 1 selected
-        .expand_me#nine Expanded! Option 2 selected
+            %option{:value=>"1", :rel=>"toggle[ten]"} Option 1
+            %option{:value=>"2", :rel=>"toggle[eleven]"} Option 2
+            %option{:value=>"1,2", :rel=>"toggle[ten,eleven]"} Both Options
+        .expand_me#ten Expanded! Option 1 selected
+        .expand_me#eleven Expanded! Option 2 selected

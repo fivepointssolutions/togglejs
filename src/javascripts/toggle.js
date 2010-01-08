@@ -5,7 +5,7 @@ var Toggle = {
   DefaultEffectDuration: 0.25,
   
   // Utility function. Returns everything after the first "#" character in a
-  // string. Used to extract an anchor from a URL.
+  // string. Used to extract the anchor from a URL.
   extractAnchor: function(string) {
     var matches = String(string).match(/\#(.+)$/);
     if (matches) return matches[1];
@@ -161,8 +161,7 @@ Toggle.CheckboxBehavior = Behavior.create({
   },
   
   update: function() {
-    var method = null;
-    var formElementMethod = null;
+    var method, formElementMethod;
     if (this.invert) {
       method = this.element.checked ? 'hide' : 'show';
       formElementMethod = this.element.checked ? 'disable' : 'enable';
@@ -193,23 +192,18 @@ Toggle.RadioGroupBehavior = Behavior.create({
     
     this.radioButtons = this.element.select('input[type=radio]');
     
-    this.toggleElementIDs = $A();
     this.toggleWrapperIDs = $A();
-    this.toggleElementIDsFor = {}
     this.toggleWrapperIDsFor = {};
     
     this.radioButtons.each(function(radioButton) {
       var elements = Toggle.extractToggleObjects(radioButton.readAttribute('rel'))
       var ids = elements.invoke('identify');
       var wrapperIDs = elements.map(function(e) { return Toggle.wrapElement(e) }).invoke('identify');
-      this.toggleElementIDsFor[radioButton.identify()] = ids;
       this.toggleWrapperIDsFor[radioButton.identify()] = wrapperIDs;
-      this.toggleElementIDs.push(ids);
       this.toggleWrapperIDs.push(wrapperIDs);
       radioButton.observe('click', this.onRadioButtonClick.bind(this));
     }.bind(this));
     
-    this.toggleElementIDs = this.toggleElementIDs.flatten().uniq();
     this.toggleWrapperIDs = this.toggleWrapperIDs.flatten().uniq()
     
     this.effect = "none";
@@ -253,22 +247,16 @@ Toggle.SelectBehavior = Behavior.create({
     
     // For some reason, this behavior needs to use IDs for the comparisons
     // to work correctly.
-    this.toggleElementIDs = $A();
     this.toggleWrapperIDs = $A();
-    this.toggleElementIDsFor = {}
     this.toggleWrapperIDsFor = {};
     
     optionElements.each(function(optionElement) {
       var elements = Toggle.extractToggleObjects(optionElement.readAttribute('rel'))
-      var ids = elements.invoke('identify');
       var wrapperIDs = elements.map(function(e) { return Toggle.wrapElement(e) }).invoke('identify');
-      this.toggleElementIDsFor[optionElement.identify()] = ids;
       this.toggleWrapperIDsFor[optionElement.identify()] = wrapperIDs;
-      this.toggleElementIDs.push(ids);
       this.toggleWrapperIDs.push(wrapperIDs);
     }.bind(this));
     
-    this.toggleElementIDs = this.toggleElementIDs.flatten().uniq();
     this.toggleWrapperIDs = this.toggleWrapperIDs.flatten().uniq()
     
     this.effect = "none";
