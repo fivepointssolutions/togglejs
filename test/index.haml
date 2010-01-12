@@ -12,32 +12,31 @@
         body
           font-family: "Lucida Grande", "Trebuchet MS", Helvetica, Arial, sans-serif
           font-size: 80%
-        form
-          label
-            display: block
-            &.checkbox, &.radio
-              display: inline
-          input
-            font-size: 100%
-          fieldset
-            background: #e5e5e5
-            border: 1px solid #ddd
-            padding: 5px 15px
-            margin: 1em 0
-            border-radius: 5px
-            -moz-border-radius: 5px
-            -webkit-border-raidus: 5px
-            h3
-              border-bottom: 1px solid silver
-              padding-bottom: 2px
-              margin-top: 10px
-          .expand_me
-            border: 1px solid silver
-            background: white
-            padding: 1.5em 1em
-            margin-bottom: 1em
-          #one,  #two, #seven, #nine
-            margin-bottom: 0
+        h3
+          border-bottom: 1px solid silver
+          padding-bottom: 2px
+          margin-top: 10px
+        label
+          display: block
+          &.checkbox, &.radio
+            display: inline
+        input
+          font-size: 100%
+        fieldset
+          background: #e5e5e5
+          border: 1px solid #ddd
+          padding: 5px 15px
+          margin: 1em 0
+          border-radius: 5px
+          -moz-border-radius: 5px
+          -webkit-border-radius: 5px
+        .expand_me
+          border: 1px solid silver
+          background: white
+          padding: 1.5em 1em
+          margin-bottom: 1em
+        #one,  #two, #three, #seven, #nine
+          margin-bottom: 0
     :javascript
       Event.addBehavior({
         'a.toggle': Toggle.LinkBehavior(),
@@ -68,12 +67,11 @@
           %input.checkbox.toggle{:name=>"checkbox1", :id=>"checkbox1", :type=>"checkbox", :value=>"", :rel=>"toggle[three]"}/
           %label.checkbox{:for=>"checkbox1"} Check for more
         .expand_me#three Expanded!
-        -# Still seem to be having trouble with this:
-        -# %p
-        -#   %input.checkbox.toggle{:name=>"checkbox2", :id=>"checkbox2", :type=>"checkbox", :value=>"", :rel=>"toggle[four,five]"}/
-        -#   %label.checkbox{:for=>"checkbox2"} Check for even more
-        -# .expand_me#four Expanded! 4
-        -# .expand_me#five Expanded! 5
+        %p
+          %input.checkbox.toggle{:name=>"checkbox2", :id=>"checkbox2", :type=>"checkbox", :value=>"", :rel=>"toggle[four,five]"}/
+          %label.checkbox{:for=>"checkbox2"} Check for even more
+        .expand_me#four Expanded! 4
+        .expand_me#five Expanded! 5
       %fieldset
         %h3 Toggle.CheckboxBehavior (inverted)
         %p

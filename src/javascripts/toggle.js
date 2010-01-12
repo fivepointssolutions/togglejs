@@ -169,8 +169,11 @@ Toggle.CheckboxBehavior = Behavior.create({
       method = this.element.checked ? 'show' : 'hide';
       formElementMethod = this.element.checked ? 'enable' : 'disable';
     }
-    this.toggleWrappers.each(function(wrapper) {
+    this.toggleWrappers.each(function(wrapper, index) {
       Toggle[method](wrapper, this.effect);
+      // I'm not sure why this is necessary, but it seems to be in order to
+      // get effects to work when there is more than one element:
+      setTimeout(function() { Element[method](wrapper) }, 0);
       Form.getElements(wrapper).invoke(formElementMethod);
     }.bind(this));
   }
