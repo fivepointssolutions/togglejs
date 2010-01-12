@@ -6,10 +6,10 @@
     %script{:type=>"text/javascript"}
       - # Inline Javascript to make this file self contained.
       = "/* <![CDATA[ */"
-      = IO.read(File.join(File.dirname(__FILE__), 'javascripts', 'prototype.js'));
-      = IO.read(File.join(File.dirname(__FILE__), 'javascripts', 'effects.js'));
-      = IO.read(File.join(File.dirname(__FILE__), 'javascripts', 'lowpro.js'));
-      = IO.read(File.join(File.dirname(__FILE__), 'javascripts', 'toggle.js'));
+      = IO.read(File.join(File.dirname(__FILE__), '..', 'src', 'javascripts', 'prototype.js'));
+      = IO.read(File.join(File.dirname(__FILE__), '..', 'src', 'javascripts', 'effects.js'));
+      = IO.read(File.join(File.dirname(__FILE__), '..', 'src', 'javascripts', 'lowpro.js'));
+      = IO.read(File.join(File.dirname(__FILE__), '..', 'src', 'javascripts', 'toggle.js'));
       = "/* ]]> */"
     %style{:type=>"text/css"}
       :sass
@@ -39,12 +39,17 @@
           background: white
           padding: 1.5em 1em
           margin-bottom: 1em
-        #one,  #two, #three, #seven, #nine
+        #one, #three, #four, #five, #nine, #eleven
           margin-bottom: 0
     :javascript
       Event.addBehavior({
         'a.toggle': Toggle.LinkBehavior(),
-        'a.swap': Toggle.LinkBehavior({swap: true, effect: 'blind'}),
+        'a.open': Toggle.LinkBehavior({
+          effect: 'blind',
+          afterToggle: function(link) {
+            link.innerHTML = (link.innerHTML == "Open") ? "Close" : "Open";
+          }
+        }),
         'form input.checkbox.toggle': Toggle.CheckboxBehavior(),
         'form input.checkbox.inverted_toggle': Toggle.CheckboxBehavior({invert: true}),
         'form .radio_group.toggle': Toggle.RadioGroupBehavior({effect: 'blind'}),
@@ -57,31 +62,35 @@
         %h3 Toggle.LinkBehavior
         .expand_me#one Expanded!
         %p
-          %a.toggle{:href=>"#one"} Click to Expand
-      %fieldset
-        %h3 Toggle.LinkBehavior (swap)
-        .expand_me#two Expanded!
+          %a.toggle{:href=>"#one", :rel=>"toggle[one]"} Expand
+        .expand_me#two Expanded! 1
+        .expand_me#three Expanded! 2
         %p
-          %a.swap{:href=>"#two"} Click to Open
-          %a.swap{:href=>"#two", :style=>"display: none"} Click to Close
+          %a.toggle{:href=>"#two", :rel=>"toggle[two,three]"} Expand even more
+      -## This needs to be completely rethought:
+      %fieldset
+        %h3 Toggle.LinkBehavior (with afterToggle event handler)
+        .expand_me#four Expanded!
+        %p
+          %a.open{:href=>"#four", :rel=>"toggle[four]"} Open
       
       %fieldset
         %h3 Toggle.CheckboxBehavior
         %p
-          %input.checkbox.toggle{:name=>"checkbox1", :id=>"checkbox1", :type=>"checkbox", :value=>"", :rel=>"toggle[three]"}/
+          %input.checkbox.toggle{:name=>"checkbox1", :id=>"checkbox1", :type=>"checkbox", :value=>"", :rel=>"toggle[five]"}/
           %label.checkbox{:for=>"checkbox1"} Check for more
-        .expand_me#three Expanded!
+        .expand_me#five Expanded!
         %p
-          %input.checkbox.toggle{:name=>"checkbox2", :id=>"checkbox2", :type=>"checkbox", :value=>"", :rel=>"toggle[four,five]"}/
+          %input.checkbox.toggle{:name=>"checkbox2", :id=>"checkbox2", :type=>"checkbox", :value=>"", :rel=>"toggle[six,seven]"}/
           %label.checkbox{:for=>"checkbox2"} Check for even more
-        .expand_me#four Expanded! 4
-        .expand_me#five Expanded! 5
+        .expand_me#six Expanded! 1
+        .expand_me#seven Expanded! 2
       %fieldset
         %h3 Toggle.CheckboxBehavior (inverted)
         %p
-          %input.checkbox.inverted_toggle{:name=>"checkbox3", :id=>"checkbox3", :type=>"checkbox", :value=>"", :rel=>"toggle[six]"}/
+          %input.checkbox.inverted_toggle{:name=>"checkbox3", :id=>"checkbox3", :type=>"checkbox", :value=>"", :rel=>"toggle[eight]"}/
           %label.checkbox{:for=>"checkbox3"} Check for less
-        .expand_me#six Expanded!
+        .expand_me#eight Expanded!
       
       %fieldset
         %h3 Toggle.RadioGroupBehavior
@@ -90,16 +99,16 @@
             %input.radio{:name=>"option", :id=>"option_1", :type=>"radio", :value=>"1", :checked=>true}/
             %label.radio{:for=>"option_1"} None
           %p
-            %input.radio{:name=>"option", :id=>"option_2", :type=>"radio", :value=>"2", :rel=>"toggle[seven]"}/
+            %input.radio{:name=>"option", :id=>"option_2", :type=>"radio", :value=>"2", :rel=>"toggle[nine]"}/
             %label.radio{:for=>"option_2"} Expand One
-          .expand_me#seven Expanded!
-          %p
-            %input.radio{:name=>"option", :id=>"option_3", :type=>"radio", :value=>"3", :rel=>"toggle[eight,nine]"}/
-            %label.radio{:for=>"option_3"} Expand Two
-          .expand_me#eight Expanded!  
           .expand_me#nine Expanded!
           %p
-            %input.radio{:name=>"option", :id=>"option_4", :type=>"radio", :value=>"4", :rel=>"toggle[seven,eight,nine]"}/
+            %input.radio{:name=>"option", :id=>"option_3", :type=>"radio", :value=>"3", :rel=>"toggle[ten,eleven]"}/
+            %label.radio{:for=>"option_3"} Expand Two
+          .expand_me#ten Expanded!  
+          .expand_me#eleven Expanded!
+          %p
+            %input.radio{:name=>"option", :id=>"option_4", :type=>"radio", :value=>"4", :rel=>"toggle[nine,ten,eleven]"}/
             %label.radio{:for=>"option_4"} Expand All
       
       %fieldset
@@ -107,8 +116,8 @@
         %p
           %select.toggle{:name=>"select", :id=>"select"}
             %option &lt;select one&gt;
-            %option{:value=>"1", :rel=>"toggle[ten]"} Option 1
-            %option{:value=>"2", :rel=>"toggle[eleven]"} Option 2
-            %option{:value=>"1,2", :rel=>"toggle[ten,eleven]"} Both Options
-        .expand_me#ten Expanded! Option 1 selected
-        .expand_me#eleven Expanded! Option 2 selected
+            %option{:value=>"1", :rel=>"toggle[twelve]"} Option 1
+            %option{:value=>"2", :rel=>"toggle[thirteen]"} Option 2
+            %option{:value=>"1,2", :rel=>"toggle[twelve,thirteen]"} Both Options
+        .expand_me#twelve Expanded! Option 1 selected
+        .expand_me#thirteen Expanded! Option 2 selected

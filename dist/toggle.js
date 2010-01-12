@@ -39,6 +39,12 @@ var Toggle = {
   DefaultEffect: 'slide',
   DefaultEffectDuration: 0.25,
   
+  EffectPairs: {
+    'slide' :  ['SlideDown','SlideUp'],
+    'blind' :  ['BlindDown','BlindUp'],
+    'appear': ['Appear','Fade']
+  },
+  
   // Utility function. Returns everything after the first "#" character in a
   // string. Used to extract the anchor from a URL.
   extractAnchor: function(string) {
@@ -61,42 +67,61 @@ var Toggle = {
     }
   },
   
-  // Utility function. Wraps Effect.toggle(), but adds one additional effect:
-  // "none". When "none" is specified, Element.toggle() is called instead.
-  toggle: function(element, effect, options) {
-    var element = $(element);
+  // Utility function. Toggles an element or array of elements with effect
+  // and options. Similar to Effect.toggle(), but works with multiple elements
+  // and also supports setting effect to "none".
+  //
+  // *Options*
+  // 
+  // elements :  An element or array of elements to toggle
+  // effect   :  This option specifies the effect that should be used when
+  //             toggling. The default is "slide", but it can also be set to
+  //             "blind", "appear", or "none".
+  // options  : The standard Effect option hash.
+  toggle: function(elements, effect, options) {
+    var elements = $A([elements]).flatten();
+    var effect = (effect || Toggle.DefaultEffect).toLowerCase();
     var options = options || {};
-    options.duration = options.duration || Toggle.DefaultEffectDuration
+    
     if (effect == 'none') {
-      element.toggle();
+      elements.invoke("toggle");
       if (options.afterFinish) options.afterFinish();
     } else {
-      Effect.toggle(element, effect, options);
+      options.duration = options.duration || Toggle.DefaultEffectDuration;
+      
+      var effects = elements.map(function(e) {
+        var element = $(e);
+        var inOrOut = element.visible() ? 1 : 0;
+        var name = Toggle.EffectPairs[effect][inOrOut];
+        return new Effect[name](element, { sync: true });
+      });
+      
+      new Effect.Parallel(effects, options);
     }
   },
   
-  // Utility function. Toggles an element with effect and options, but only if
-  // it is *not* visible.
-  show: function(element, effect, options) {
-    var element = $(element);
-    if (!element.visible()) {
-      Toggle.toggle(element, effect, options);
-    }
+  // Utility function. Shows an element or array of elements with effect
+  // and options.
+  show: function(elements, effect, options) {
+    var elements = $([elements]).flatten();
+    elements = elements.map(function(element) { return $(element) });
+    elements = elements.reject(function(element) { return element.visible() });
+    Toggle.toggle(elements, effect, options);
   },
   
-  // Utility function. Toggles an element with effect and options, but only
-  // if it *is* visible.
-  hide: function(element, effect, options) {
-    var element = $(element);
-    if (element.visible()) {
-      Toggle.toggle(element, effect, options)
-    }
+  // Utility function. Hides an element or array of elements with effect
+  // and options.
+  hide: function(elements, effect, options) {
+    var elements = $([elements]).flatten();
+    elements = elements.map(function(element) { return $(element) });
+    elements = elements.reject(function(element) { return !element.visible() });
+    Toggle.toggle(elements, effect, options);
   },
   
   // Utility function. Wraps element with a div of class "toggle_wrapper"
   // unless one already exists. Returns the "toggle_wrapper" for given
   // element. This is necessary because effects only work properly on
-  // elements that do not padding, borders, or margin.
+  // elements that do not have padding, borders, or margin.
   wrapElement: function(element) {
     var element = $(element);
     var parent = $(element.parentNode);
@@ -108,46 +133,37 @@ var Toggle = {
   }
 };
 
-// Allows a link to toggle the display of another element. Just set the href
-// of the link to the ID of the element you want to toggle ("#toggle_me").
+// Allows a link to toggle the display of another element or array of
+// elements on and off. Just set the <tt>rel</tt> attribute to
+// "toggle[id1,id2,...]" on the link and the href of the link to the
+// ID of the first element ("#id1").
 // 
 // *Options*
 // 
-// swap    :  When this option is set to true a link that is visible will be
-//            hidden and a link that is hidden will be shown when the
-//            associated element is shown (and vise-versa).
 // effect  :  This option specifies the effect that should be used when
 //            toggling. The default is "slide", but it can also be set to
 //            "blind", "appear", or "none".
 Toggle.LinkBehavior = Behavior.create({
-  
   initialize: function(options) {
     var options = options || {};
-    this.swap = options.swap || false;
     this.effect = options.effect || Toggle.DefaultEffect;
+    this.afterToggle = options.afterToggle || Prototype.emptyFunction;
     
-    this.toggleID = Toggle.extractAnchor(this.element.href);
-    this.toggleElement = $(this.toggleID);
-    this.toggleWrapper = Toggle.wrapElement(this.toggleElement);
+    var elements = Toggle.extractToggleObjects(this.element.readAttribute('rel'));
+    this.toggleWrappers = elements.map(function(e) { return Toggle.wrapElement(e) });
     
+    this.toggleID = Toggle.extractAnchor(this.element.href)
     this.element.behavior = this; // a bit of a hack
     Toggle.addLink(this.toggleID, this.element)
   },
   
   onclick: function() {
     Toggle.toggle(
-      this.toggleWrapper,
+      this.toggleWrappers,
       this.effect,
-      { afterFinish: function() { this._toggleLinkVisibility(); }.bind(this) }
+      { afterFinish: function() { this.afterToggle(this.element).bind(this) }.bind(this) }
     );
     return false;
-  },
-  
-  _toggleLinkVisibility: function() {
-    if (this.swap) {
-      var links = Toggle.links[this.toggleID];
-      links.invoke('toggle');
-    }
   }
 });
 Toggle.links = {};
@@ -182,8 +198,8 @@ Toggle.CheckboxBehavior = Behavior.create({
     var options = options || {};
     this.invert = options.invert;
     
-    this.toggleElements = Toggle.extractToggleObjects(this.element.readAttribute('rel'));
-    this.toggleWrappers = this.toggleElements.map(function(e) { return Toggle.wrapElement(e) });
+    var elements = Toggle.extractToggleObjects(this.element.readAttribute('rel'));
+    this.toggleWrappers = elements.map(function(e) { return Toggle.wrapElement(e) });
     
     this.effect = 'none';
     this.update();
@@ -197,6 +213,7 @@ Toggle.CheckboxBehavior = Behavior.create({
   
   update: function() {
     var method, formElementMethod;
+    
     if (this.invert) {
       method = this.element.checked ? 'hide' : 'show';
       formElementMethod = this.element.checked ? 'disable' : 'enable';
@@ -204,10 +221,14 @@ Toggle.CheckboxBehavior = Behavior.create({
       method = this.element.checked ? 'show' : 'hide';
       formElementMethod = this.element.checked ? 'enable' : 'disable';
     }
+    
+    Toggle[method](this.toggleWrappers, this.effect);
+    
+    // Disable/enable form elements based on whether the container is
+    // visible or not.
     this.toggleWrappers.each(function(wrapper) {
-      Toggle[method](wrapper, this.effect);
       Form.getElements(wrapper).invoke(formElementMethod);
-    }.bind(this));
+    });
   }
 });
 
@@ -243,6 +264,7 @@ Toggle.RadioGroupBehavior = Behavior.create({
     
     this.effect = "none";
     this.update();
+    
     this.effect = options.effect || Toggle.DefaultEffect;
   },
   
@@ -254,13 +276,9 @@ Toggle.RadioGroupBehavior = Behavior.create({
     var group = this.element;
     var radioButton = this.radioButtons.find(function(b) { return b.checked });
     var wrapperIDs = this.toggleWrapperIDsFor[radioButton.identify()];
-    this.toggleWrapperIDs.each(function(id) {
-      if (wrapperIDs.include(id)) {
-        Toggle.show(id, this.effect);
-      } else {
-        Toggle.hide(id, this.effect);
-      }
-    }.bind(this));
+    var partitioned = this.toggleWrapperIDs.partition(function(id) { return wrapperIDs.include(id) });
+    Toggle.show(partitioned[0], this.effect);
+    Toggle.hide(partitioned[1], this.effect);
   }
 });
 
@@ -296,6 +314,7 @@ Toggle.SelectBehavior = Behavior.create({
     
     this.effect = "none";
     this.update();
+    
     this.effect = options.effect || Toggle.DefaultEffect;
   },
   
@@ -307,12 +326,8 @@ Toggle.SelectBehavior = Behavior.create({
     var combo = this.element;
     var option = $(combo.options[combo.selectedIndex]);
     var wrapperIDs = this.toggleWrapperIDsFor[option.identify()];
-    this.toggleWrapperIDs.each(function(id) {
-      if (wrapperIDs.include(id)) {
-        Toggle.show(id, this.effect);
-      } else {
-        Toggle.hide(id, this.effect);
-      }
-    }.bind(this));
+    var partitioned = this.toggleWrapperIDs.partition(function(id) { return wrapperIDs.include(id) });
+    Toggle.show(partitioned[0], this.effect);
+    Toggle.hide(partitioned[1], this.effect);
   }
 });
