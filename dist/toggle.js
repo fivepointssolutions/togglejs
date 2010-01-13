@@ -10,7 +10,7 @@
  * checkboxes, radio buttons, and selects.
  * 
  * To use you will need to install the following LowPro behaviors. If you are 
- * using Rails, this typically in "application.js":
+ * using Rails, put this in "application.js":
  * 
  *   Event.addBehavior({
  *     'a.toggle': Toggle.LinkBehavior(),
