@@ -21,7 +21,7 @@ var Toggle = {
   },
   
   /**
-   *  Toggle.extractToggleObjects(string) -> String
+   *  Toggle.extractToggleObjects(string) -> Array
    *  
    *  Utility function. Returns the associated toggle elements in a string. For
    *  string "toggle[one,two,three]" it will return the elements with IDs of
@@ -200,11 +200,10 @@ Event.observe(window, 'dom:loaded', function() {
  * class Toggle.CheckboxBehavior < Behavior
  *  
  *  Allows a the selection of a checkbox to toggle an element or group of
- *  elements on and off. Just set the <tt>rel</tt> attribute to
- *  "toggle[id1,id2,...]" on the checkbox.
+ *  elements on and off. Just set the `rel` attribute to "toggle[id1,id2,...]"
+ *  on the checkbox.
  *  
- *  *Options*
- *  
+ *  Options
  *  - invert: When set to true the associated element is hidden when checked.
  *  - effect: This option specifies the effect that should be used when
  *    toggling. The default is "slide", but it can also be set to
