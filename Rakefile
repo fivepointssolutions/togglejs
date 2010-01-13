@@ -15,9 +15,9 @@ task :dist => [:clean] do
   mkpath 'dist'
   readme = IO.read('README')
   readme = "/*\n" + readme.split("\n").map { |line| " * #{line}" }.join("\n") + "\n *\n */\n\n"
-  statusjs = IO.read('src/javascripts/toggle.js')
+  togglejs = IO.read('src/javascripts/toggle.js')
   open('dist/toggle.js', 'w') do |f|
-    f.write(readme + statusjs)
+    f.write(readme + togglejs)
   end
 end
 
