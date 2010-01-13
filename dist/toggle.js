@@ -64,7 +64,6 @@
  *
  */
 
-// namespace object
 var Toggle = {
   
   DefaultEffect: 'slide',
@@ -76,16 +75,24 @@ var Toggle = {
     'appear': ['Appear','Fade']
   },
   
-  // Utility function. Returns everything after the first "#" character in a
-  // string. Used to extract the anchor from a URL.
-  extractAnchor: function(string) {
-    var matches = String(string).match(/\#(.+)$/);
+  /**
+   *  Toggle.extractAnchor(url) -> String
+   *  
+   *  Utility function. Returns everything after the first "#" character in a
+   *  string. Used to extract the anchor from a URL.
+  **/
+  extractAnchor: function(url) {
+    var matches = String(url).match(/\#(.+)$/);
     if (matches) return matches[1];
   },
   
-  // Utility function. Returns the associated toggle elements in a string. For
-  // string "toggle[one,two,three]" it will return the elements with IDs of
-  // "one", "two", and "three".
+  /**
+   *  Toggle.extractToggleObjects(string) -> String
+   *  
+   *  Utility function. Returns the associated toggle elements in a string. For
+   *  string "toggle[one,two,three]" it will return the elements with IDs of
+   *  "one", "two", and "three".
+  **/
   extractToggleObjects: function(string) {
     var matches = String(string).match(/^toggle\[(.+)\]$/);
     if (matches) {
@@ -98,18 +105,21 @@ var Toggle = {
     }
   },
   
-  // Utility function. Toggles an element or array of elements with effect
-  // and options. Similar to Effect.toggle(), but works with multiple elements
-  // and also supports setting effect to "none".
-  //
-  // *Parameters*
-  // 
-  // elements :  An element or array of elements to toggle
-  // effect   :  This option specifies the effect that should be used when
-  //             toggling. The default is "slide", but it can also be set to
-  //             "blind", "appear", or "none".
-  // options  : The standard Effect options hash with the addition of
-  //            beforeToggle and afterToggle events.
+  /**
+   *  Toggle.toggle(elements, effect, options)
+   *  
+   *  Utility function. Toggles an element or array of elements with effect
+   *  and options. Similar to `Effect.toggle()`, but works with multiple
+   *  elements and also supports setting effect to "none".
+   *  
+   *  Parameters
+   *  - elements: An element or array of elements to toggle
+   *  - effect: This option specifies the effect that should be used when
+   *    toggling. The default is "slide", but it can also be set to
+   *    "blind", "appear", or "none".
+   *  - options: The standard Effect options hash with the addition of
+   *    beforeToggle and afterToggle events.
+  **/
   toggle: function(elements, effect, options) {
     var elements = $A([elements]).flatten();
     var effect = (effect || Toggle.DefaultEffect).toLowerCase();
@@ -133,8 +143,12 @@ var Toggle = {
     }
   },
   
-  // Utility function. Shows an element or array of elements with effect
-  // and options.
+  /**
+   *  Toggle.show(elements, effect, options)
+   *  
+   *  Utility function. Shows an element or array of elements with effect
+   *  and options.
+  **/
   show: function(elements, effect, options) {
     var elements = $([elements]).flatten();
     elements = elements.map(function(element) { return $(element) });
@@ -142,8 +156,12 @@ var Toggle = {
     Toggle.toggle(elements, effect, options);
   },
   
-  // Utility function. Hides an element or array of elements with effect
-  // and options.
+  /**
+   *  Toggle.hide(elements, effect, options)
+   *  
+   *  Utility function. Hides an element or array of elements with effect
+   *  and options.
+  **/
   hide: function(elements, effect, options) {
     var elements = $([elements]).flatten();
     elements = elements.map(function(element) { return $(element) });
@@ -151,10 +169,14 @@ var Toggle = {
     Toggle.toggle(elements, effect, options);
   },
   
-  // Utility function. Wraps element with a div of class "toggle_wrapper"
-  // unless one already exists. Returns the "toggle_wrapper" for given
-  // element. This is necessary because effects only work properly on
-  // elements that do not have padding, borders, or margin.
+  /**
+   *  Toggle.wrapElement(element)
+   *  
+   *  Utility function. Wraps element with a div of class "toggle_wrapper"
+   *  unless one already exists. Returns the "toggle_wrapper" for given
+   *  element. This is necessary because effects only work properly on
+   *  elements that do not have padding, borders, or margin.
+  **/
   wrapElement: function(element) {
     var element = $(element);
     var parent = $(element.parentNode);
@@ -166,23 +188,26 @@ var Toggle = {
   }
 };
 
-// Allows a link to toggle the display of another element or array of
-// elements on and off. Just set the <tt>rel</tt> attribute to
-// "toggle[id1,id2,...]" on the link and the href of the link to the
-// ID of the first element ("#id1").
-// 
-// *Options*
-// 
-// effect       : This option specifies the effect that should be used when
-//                 toggling. The default is "slide", but it can also be set to
-//                 "blind", "appear", or "none".
-// beforeToggle : Called after the link is clicked, but before the effect is
-//                started. The link is passed as the first parameter and the
-//                function is automatically bound to the behavior (so "this"
-//                refers to the behavior).
-// afterToggle :  Called after the effect is complete. The link is passed as
-//                the first parameter and the function is automatically bound
-//                to the behavior (so "this" refers to the behavior).
+/**
+ * class Toggle.LinkBehavior < Behavior
+ *
+ *  Allows a link to toggle the display of another element or array of
+ *  elements on and off. Just set the <tt>rel</tt> attribute to
+ *  "toggle[id1,id2,...]" on the link and the href of the link to the
+ *  ID of the first element ("#id1").
+ *  
+ *  Options
+ *  - effect: This option specifies the effect that should be used when
+ *    toggling. The default is "slide", but it can also be set to
+ *    "blind", "appear", or "none".
+ *  - beforeToggle: Called after the link is clicked, but before the effect is
+ *    started. The link is passed as the first parameter and the
+ *    function is automatically bound to the behavior (so "this"
+ *    refers to the behavior).
+ *  - afterToggle: Called after the effect is complete. The link is passed as
+ *    the first parameter and the function is automatically bound
+ *    to the behavior (so "this" refers to the behavior).
+**/
 Toggle.LinkBehavior = Behavior.create({
   initialize: function(options) {
     var options = options || {};
@@ -204,6 +229,11 @@ Toggle.LinkBehavior = Behavior.create({
   },
   
   onclick: function() {
+    this.toggle();
+    return false;
+  },
+  
+  toggle: function() {
     Toggle.toggle(
       this.toggleWrappers,
       this.effect,
@@ -212,7 +242,6 @@ Toggle.LinkBehavior = Behavior.create({
         afterFinish: function() { this.afterToggle(this.element) }.bind(this)
       }
     );
-    return false;
   }
 });
 Toggle.links = {};
@@ -220,6 +249,7 @@ Toggle.addLink = function(id, element) {
   this.links[id] = this.links[id] || $A();
   this.links[id].push(element);
 };
+
 
 // Automatically toggle associated element if anchor is equal to the ID of the
 // link's associated element.
@@ -232,16 +262,20 @@ Event.observe(window, 'dom:loaded', function() {
   }
 });
 
-// Allows a the selection of a checkbox to toggle an element or group of
-// elements on and off. Just set the <tt>rel</tt> attribute to
-// "toggle[id1,id2,...]" on the checkbox.
-// 
-// *Options*
-// 
-// invert  :  When set to true the associated element is hidden when checked.
-// effect  :  This option specifies the effect that should be used when
-//            toggling. The default is "slide", but it can also be set to
-//            "blind", "appear", or "none".
+/**
+ * class Toggle.CheckboxBehavior < Behavior
+ *  
+ *  Allows a the selection of a checkbox to toggle an element or group of
+ *  elements on and off. Just set the <tt>rel</tt> attribute to
+ *  "toggle[id1,id2,...]" on the checkbox.
+ *  
+ *  *Options*
+ *  
+ *  - invert: When set to true the associated element is hidden when checked.
+ *  - effect: This option specifies the effect that should be used when
+ *    toggling. The default is "slide", but it can also be set to
+ *    "blind", "appear", or "none".
+**/
 Toggle.CheckboxBehavior = Behavior.create({
   initialize: function(options) {
     var options = options || {};
@@ -257,10 +291,10 @@ Toggle.CheckboxBehavior = Behavior.create({
   },
   
   onclick: function(event) {
-    this.update();
+    this.toggle();
   },
   
-  update: function() {
+  toggle: function() {
     var method, formElementMethod;
     
     if (this.invert) {
@@ -281,16 +315,19 @@ Toggle.CheckboxBehavior = Behavior.create({
   }
 });
 
-// Allows you to toggle elements based on the selection of a group of radio
-// buttons. Just set the <tt>rel</tt> attribute to "toggle[id1,id2,...]" on
-// each radio button. Radio buttons must be grouped inside a containing
-// element to which the behavior is applied.
-// 
-// *Options*
-// 
-// effect  :  This option specifies the effect that should be used when
-//            toggling. The default is "slide", but it can also be set to
-//            "blind", "appear", or "none".
+/**
+ * class Toggle.RadioGroupBehavior < Behavior
+ *  
+ *  Allows you to toggle elements based on the selection of a group of radio
+ *  buttons. Just set the <tt>rel</tt> attribute to "toggle[id1,id2,...]" on
+ *  each radio button. Radio buttons must be grouped inside a containing
+ *  element to which the behavior is applied.
+ *  
+ *  Options
+ *  - effect: This option specifies the effect that should be used when
+ *    toggling. The default is "slide", but it can also be set to
+ *    "blind", "appear", or "none".
+**/
 Toggle.RadioGroupBehavior = Behavior.create({
   initialize: function(options) {
     var options = options || {};
@@ -318,10 +355,10 @@ Toggle.RadioGroupBehavior = Behavior.create({
   },
   
   onRadioButtonClick: function(event) {
-    this.update();
+    this.toggle();
   },
   
-  update: function() {
+  toggle: function() {
     var group = this.element;
     var radioButton = this.radioButtons.find(function(b) { return b.checked });
     var wrapperIDs = this.toggleWrapperIDsFor[radioButton.identify()];
@@ -332,15 +369,18 @@ Toggle.RadioGroupBehavior = Behavior.create({
 });
 
 
-// Allows you to toggle elements based on the selection of a combo box. Just
-// set the <tt>rel</tt> attribute to "toggle[id1,id2,...]" on the each select
-// option.
-// 
-// *Options*
-// 
-// effect  :  This option specifies the effect that should be used when
-//            toggling. The default is "slide", but it can also be set to
-//            "blind", "appear", or "none".
+/**
+ * class Toggle.SelectBehavior < Behavior
+ *  
+ *  Allows you to toggle elements based on the selection of a combo box. Just
+ *  set the <tt>rel</tt> attribute to "toggle[id1,id2,...]" on the each select
+ *  option.
+ *  
+ *  Options
+ *  - effect: This option specifies the effect that should be used when
+ *    toggling. The default is "slide", but it can also be set to
+ *    "blind", "appear", or "none".
+**/
 Toggle.SelectBehavior = Behavior.create({
   initialize: function(options) {
     var options = options || {};
@@ -368,10 +408,10 @@ Toggle.SelectBehavior = Behavior.create({
   },
   
   onchange: function(event) {
-    this.update();
+    this.toggle();
   },
   
-  update: function() {
+  toggle: function() {
     var combo = this.element;
     var option = $(combo.options[combo.selectedIndex]);
     var wrapperIDs = this.toggleWrapperIDsFor[option.identify()];

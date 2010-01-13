@@ -19,21 +19,21 @@ task :dist => [:clean] do
   end
 end
 
-## This doesn't seem to be working at the moment:
-# desc 'Build documentation from source'
-# task :doc do
-#   require 'rubygems'
-#   gem 'pdoc'
-#   require 'pdoc'
-#   rm_rf 'doc'
-#   mkpath 'doc'
-#   files = FileList['src/javascripts/*.js']
-#   files.exclude('prototype.js', 'effects.js', 'lowpro.js')
-#   PDoc.run(
-#     :source_files => files,
-#     :destination => 'doc',
-#     # :index_page => 'README.markdown',
-#     :syntax_highlighter => :pygments,
-#     :markdown_parser => :bluecloth
-#   )
-# end
+# This doesn't seem to be working at the moment.
+desc 'Build documentation from source'
+task :doc do
+  require 'rubygems'
+  gem 'pdoc'
+  require 'pdoc'
+  rm_rf 'doc'
+  mkpath 'doc'
+  files = FileList['src/javascripts/*.js']
+  files.exclude('prototype.js', 'effects.js', 'lowpro.js')
+  PDoc.run(
+    :source_files => files,
+    :destination => 'doc',
+    # :index_page => 'README.markdown',
+    :syntax_highlighter => :pygments,
+    :markdown_parser => :bluecloth
+  )
+end
