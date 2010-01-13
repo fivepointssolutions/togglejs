@@ -1,6 +1,5 @@
 desc 'Launch the testing server on port 4000'
 task :demo do
-  `open http://localhost:4000/demo`
   `serve` # Requires http://github.com/jlong/serve
 end
 
