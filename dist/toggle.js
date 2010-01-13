@@ -34,11 +34,11 @@
  * that all of the radio buttons are inside of a div with a class of
  * "radio_group toggle". Then set the "rel" attribute on each radio button
  * that should act as a toggle trigger. Selects work in a similar manner,
- * but the "rel" attribute should be set on each of the option elements that
- * should toggle the visibility of an element or array of elements.
+ * but the "rel" attribute should be set on each option element that should
+ * toggle the visibility of an element or array of elements.
  * 
  * Each of the included LowPro behaviors can be customized in various ways.
- * Check out the inline documentation below for detailed usage information.
+ * Check out the inline documentation for detailed usage information.
  * 
  * --------------------------------------------------------------------------
  * 
