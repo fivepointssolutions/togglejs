@@ -3,14 +3,17 @@
   %head
     %meta{"http-equiv"=>"Content-type", :content=>"text/html; charset=utf-8"}/
     %title Toggle JS
-    %script{:type=>"text/javascript"}
-      - # Inline Javascript to make this file self contained.
-      = "/* <![CDATA[ */"
-      = IO.read(File.join(File.dirname(__FILE__), '..', 'src', 'javascripts', 'prototype.js'));
-      = IO.read(File.join(File.dirname(__FILE__), '..', 'src', 'javascripts', 'effects.js'));
-      = IO.read(File.join(File.dirname(__FILE__), '..', 'src', 'javascripts', 'lowpro.js'));
-      = IO.read(File.join(File.dirname(__FILE__), '..', 'src', 'javascripts', 'toggle.js'));
-      = "/* ]]> */"
+    - scripts = %w(prototype effects lowpro toggle)
+    - if params[:inline]
+      - # Inline Javascript to make this file self contained for demo purposes
+      %script{:type=>"text/javascript"}
+        = "//<![CDATA["
+        - for script in scripts
+          = IO.read(File.join(File.dirname(__FILE__), '..', 'src', 'javascripts', "#{script}.js"))
+        = "//]]>"
+    - else
+      - for script in scripts
+        %script{:src=>"/src/javascripts/#{script}.js", :type=>"text/javascript"}
     %style{:type=>"text/css"}
       :sass
         body
