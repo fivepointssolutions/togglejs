@@ -40,8 +40,8 @@ var Toggle = {
   DefaultEffectDuration: 0.25,
   
   EffectPairs: {
-    'slide' :  ['SlideDown','SlideUp'],
-    'blind' :  ['BlindDown','BlindUp'],
+    'slide' : ['SlideDown','SlideUp'],
+    'blind' : ['BlindDown','BlindUp'],
     'appear': ['Appear','Fade']
   },
   
@@ -71,19 +71,21 @@ var Toggle = {
   // and options. Similar to Effect.toggle(), but works with multiple elements
   // and also supports setting effect to "none".
   //
-  // *Options*
+  // *Parameters*
   // 
   // elements :  An element or array of elements to toggle
   // effect   :  This option specifies the effect that should be used when
   //             toggling. The default is "slide", but it can also be set to
   //             "blind", "appear", or "none".
-  // options  : The standard Effect option hash.
+  // options  : The standard Effect options hash with the addition of
+  //            beforeToggle and afterToggle events.
   toggle: function(elements, effect, options) {
     var elements = $A([elements]).flatten();
     var effect = (effect || Toggle.DefaultEffect).toLowerCase();
     var options = options || {};
     
     if (effect == 'none') {
+      if (options.beforeStart) options.beforeStart();
       elements.invoke("toggle");
       if (options.afterFinish) options.afterFinish();
     } else {
@@ -140,14 +142,27 @@ var Toggle = {
 // 
 // *Options*
 // 
-// effect  :  This option specifies the effect that should be used when
-//            toggling. The default is "slide", but it can also be set to
-//            "blind", "appear", or "none".
+// effect       : This option specifies the effect that should be used when
+//                 toggling. The default is "slide", but it can also be set to
+//                 "blind", "appear", or "none".
+// beforeToggle : Called after the link is clicked, but before the effect is
+//                started. The link is passed as the first parameter and the
+//                function is automatically bound to the behavior (so "this"
+//                refers to the behavior).
+// afterToggle :  Called after the effect is complete. The link is passed as
+//                the first parameter and the function is automatically bound
+//                to the behavior (so "this" refers to the behavior).
 Toggle.LinkBehavior = Behavior.create({
   initialize: function(options) {
     var options = options || {};
+    
     this.effect = options.effect || Toggle.DefaultEffect;
+    
+    this.beforeToggle = options.beforeToggle || Prototype.emptyFunction;
+    this.beforeToggle.bind(this);
+    
     this.afterToggle = options.afterToggle || Prototype.emptyFunction;
+    this.afterToggle.bind(this);
     
     var elements = Toggle.extractToggleObjects(this.element.readAttribute('rel'));
     this.toggleWrappers = elements.map(function(e) { return Toggle.wrapElement(e) });
@@ -161,7 +176,10 @@ Toggle.LinkBehavior = Behavior.create({
     Toggle.toggle(
       this.toggleWrappers,
       this.effect,
-      { afterFinish: function() { this.afterToggle(this.element).bind(this) }.bind(this) }
+      {
+        beforeStart: function() { this.beforeToggle(this.element) }.bind(this),
+        afterFinish: function() { this.afterToggle(this.element) }.bind(this)
+      }
     );
     return false;
   }

@@ -46,8 +46,11 @@
         'a.toggle': Toggle.LinkBehavior(),
         'a.open': Toggle.LinkBehavior({
           effect: 'blind',
+          beforeToggle: function(link) {
+            link.innerHTML = (link.innerHTML == "Open") ? "Opening..." : "Closing...";
+          },
           afterToggle: function(link) {
-            link.innerHTML = (link.innerHTML == "Open") ? "Close" : "Open";
+            link.innerHTML = (link.innerHTML == "Opening...") ? "Close" : "Open";
           }
         }),
         'form input.checkbox.toggle': Toggle.CheckboxBehavior(),
@@ -67,9 +70,8 @@
         .expand_me#three Expanded! 2
         %p
           %a.toggle{:href=>"#two", :rel=>"toggle[two,three]"} Expand even more
-      -## This needs to be completely rethought:
       %fieldset
-        %h3 Toggle.LinkBehavior (with afterToggle event handler)
+        %h3 Toggle.LinkBehavior (with custom event handlers)
         .expand_me#four Expanded!
         %p
           %a.open{:href=>"#four", :rel=>"toggle[four]"} Open
