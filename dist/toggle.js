@@ -188,7 +188,7 @@ Toggle.links = {};
 Toggle.addLink = function(id, element) {
   this.links[id] = this.links[id] || $A();
   this.links[id].push(element);
-}
+};
 
 // Automatically toggle associated element if anchor is equal to the ID of the
 // link's associated element.
