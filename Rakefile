@@ -1,6 +1,6 @@
 desc 'Launch the testing server on port 4000'
-task :server do
-  cd 'test' do
+task :demo do
+  cd 'demo' do
     `serve` # Requires http://github.com/jlong/serve
   end
 end
@@ -11,7 +11,7 @@ task :clean do
 end
 
 desc 'Assemble files for distribution'
-task :package => [:clean] do
+task :dist => [:clean] do
   mkpath 'dist'
   readme = IO.read('README')
   readme = "/*\n" + readme.split("\n").map { |line| " * #{line}" }.join("\n") + "\n *\n */\n\n"
@@ -20,3 +20,22 @@ task :package => [:clean] do
     f.write(readme + statusjs)
   end
 end
+
+## This doesn't seem to be working at the moment:
+# desc 'Build documentation from source'
+# task :doc do
+#   require 'rubygems'
+#   gem 'pdoc'
+#   require 'pdoc'
+#   rm_rf 'doc'
+#   mkpath 'doc'
+#   files = FileList['src/javascripts/*.js']
+#   files.exclude('prototype.js', 'effects.js', 'lowpro.js')
+#   PDoc.run(
+#     :source_files => files,
+#     :destination => 'doc',
+#     # :index_page => 'README.markdown',
+#     :syntax_highlighter => :pygments,
+#     :markdown_parser => :bluecloth
+#   )
+# end
