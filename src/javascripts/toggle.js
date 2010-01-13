@@ -218,7 +218,7 @@ Toggle.CheckboxBehavior = Behavior.create({
     this.toggleWrappers = elements.map(function(e) { return Toggle.wrapElement(e) });
     
     this.effect = 'none';
-    this.update();
+    this.toggle();
     
     this.effect = options.effect || Toggle.DefaultEffect;
   },
@@ -282,7 +282,7 @@ Toggle.RadioGroupBehavior = Behavior.create({
     this.toggleWrapperIDs = this.toggleWrapperIDs.flatten().uniq()
     
     this.effect = "none";
-    this.update();
+    this.toggle();
     
     this.effect = options.effect || Toggle.DefaultEffect;
   },
@@ -335,7 +335,7 @@ Toggle.SelectBehavior = Behavior.create({
     this.toggleWrapperIDs = this.toggleWrapperIDs.flatten().uniq()
     
     this.effect = "none";
-    this.update();
+    this.toggle();
     
     this.effect = options.effect || Toggle.DefaultEffect;
   },
