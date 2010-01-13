@@ -6,8 +6,39 @@
  * --------------------------------------------------------------------------
  * 
  * A LowPro and Prototype-based library with a collection of behaviors for
- * unobtrusively toggling elements on and off via links, checkboxes, selects,
- * etc.
+ * unobtrusively toggling the visibility of other elements via links,
+ * checkboxes, radio buttons, and selects.
+ * 
+ * To use you will need to install the following LowPro behaviors. If you are 
+ * using Rails, this typically in "application.js":
+ * 
+ *   Event.addBehavior({
+ *     'a.toggle': Toggle.LinkBehavior(),
+ *     'input.checkbox.toggle': Toggle.CheckboxBehavior(),
+ *     'div.radio_group.toggle': Toggle.RadioGroupBehavior(),
+ *     'select.toggle': Toggle.SelectBehavior()
+ *   });
+ * 
+ * Once the hooks are installed correctly, you should add a "rel" attribute
+ * to each element that you want to use as a toggle trigger. Set the value
+ * of the "rel" attribute to "toggle[id]" where id is equal to the ID of
+ * the element that you want to toggle. You can toggle multiple elements by 
+ * separating the IDs with commas (like this: "toggle[id1,id2,id3]").
+ * 
+ * For example, a link with a class of "toggle":
+ * 
+ *   <a class="toggle" href="#more" rel="toggle[more]">More</a>
+ * 
+ * will become a trigger for a div with an ID of "more". Checkboxes work in
+ * the exact same manner. To use with a group of radio buttons, make sure
+ * that all of the radio buttons are inside of a div with a class of
+ * "radio_group toggle". Then set the "rel" attribute on each radio button
+ * that should act as a toggle trigger. Selects work in a similar manner,
+ * but the "rel" attribute should be set on each of the option elements that
+ * should toggle the visibility of an element or array of elements.
+ * 
+ * Each of the included LowPro behaviors can be customized in various ways.
+ * Check out the inline documentation below for detailed usage information.
  * 
  * --------------------------------------------------------------------------
  * 
