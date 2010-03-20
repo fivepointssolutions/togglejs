@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml"> 
+  <head> 
+    <meta content="text/html; charset=utf-8" http-equiv="Content-type" /> 
+    <title>Toggle JS</title> 
+    <script src="src/javascripts/prototype.js" type="text/javascript"></script> 
+    <script src="src/javascripts/effects.js" type="text/javascript"></script> 
+    <script src="src/javascripts/lowpro.js" type="text/javascript"></script> 
+    <script src="src/javascripts/toggle.js" type="text/javascript"></script> 
+    
+    <style type="text/css">
+    /* <![CDATA */
+      body {
+        font-family: "Lucida Grande", "Trebuchet MS", Helvetica, Arial, sans-serif;
+        font-size: 80%;
+      }
+      
+      h3 {
+        border-bottom: 1px solid silver;
+        padding-bottom: 2px;
+        margin-top: 10px;
+      }
+      
+      p {
+        margin: 1em 0;
+      }
+      
+      label {
+        display: block;
+      }
+      label.checkbox, label.radio {
+        display: inline;
+      }
+      
+      input {
+        font-size: 100%;
+      }
+      
+      fieldset {
+        background: #e5e5e5;
+        border: 1px solid #ddd;
+        padding: 5px 15px;
+        margin: 1em 0;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+      }
+      
+      .expand_me {
+        border: 1px solid silver;
+        background: white;
+        padding: 1.5em 1em;
+        margin-bottom: 1em;
+      }
+      
+      #one, #three, #four, #five, #nine, #eleven {
+        margin-bottom: 0;
+      }
+      /* ]]> */
+    </style> 
+    <script type="text/javascript"> 
+      //<![CDATA[
+        Event.addBehavior({
+          'a.toggle': Toggle.LinkBehavior(),
+          'a.open': Toggle.LinkBehavior({
+            effect: 'blind',
+            beforeToggle: function(link) {
+              link.innerHTML = (link.innerHTML == "Open") ? "Opening..." : "Closing...";
+            },
+            afterToggle: function(link) {
+              link.innerHTML = (link.innerHTML == "Opening...") ? "Close" : "Open";
+            }
+          }),
+          'form input.checkbox.toggle': Toggle.CheckboxBehavior(),
+          'form input.checkbox.inverted_toggle': Toggle.CheckboxBehavior({invert: true}),
+          'form .radio_group.toggle': Toggle.RadioGroupBehavior({effect: 'blind'}),
+          'form select.toggle': Toggle.SelectBehavior()
+        });
+      //]]>
+    </script> 
+  </head> 
+  <body> 
+    <h1>toggle.js</h1> 
+    <form> 
+      <fieldset> 
+        <h3>Toggle.LinkBehavior</h3> 
+        <div class="expand_me" id="one">Expanded!</div> 
+        <p> 
+          <a class="toggle" href="#one" rel="toggle[one]">Expand</a> 
+        </p> 
+        <div class="expand_me" id="two">Expanded! 1</div> 
+        <div class="expand_me" id="three">Expanded! 2</div> 
+        <p> 
+          <a class="toggle" href="#two" rel="toggle[two,three]">Expand even more</a> 
+        </p> 
+      </fieldset> 
+      <fieldset> 
+        <h3>Toggle.LinkBehavior (with custom event handlers)</h3> 
+        <div class="expand_me" id="four">Expanded!</div> 
+        <p> 
+          <a class="open" href="#four" rel="toggle[four]">Open</a> 
+        </p> 
+      </fieldset> 
+      <fieldset> 
+        <h3>Toggle.CheckboxBehavior</h3> 
+        <p> 
+          <input class="checkbox toggle" id="checkbox1" name="checkbox1" rel="toggle[five]" type="checkbox" value="" /> 
+          <label class="checkbox" for="checkbox1">Check for more</label> 
+        </p> 
+        <div class="expand_me" id="five">Expanded!</div> 
+        <p> 
+          <input class="checkbox toggle" id="checkbox2" name="checkbox2" rel="toggle[six,seven]" type="checkbox" value="" /> 
+          <label class="checkbox" for="checkbox2">Check for even more</label> 
+        </p> 
+        <div class="expand_me" id="six">Expanded! 1</div> 
+        <div class="expand_me" id="seven">Expanded! 2</div> 
+      </fieldset> 
+      <fieldset> 
+        <h3>Toggle.CheckboxBehavior (inverted)</h3> 
+        <p> 
+          <input class="checkbox inverted_toggle" id="checkbox3" name="checkbox3" rel="toggle[eight]" type="checkbox" value="" /> 
+          <label class="checkbox" for="checkbox3">Check for less</label> 
+        </p> 
+        <div class="expand_me" id="eight">Expanded!</div> 
+      </fieldset> 
+      <fieldset> 
+        <h3>Toggle.RadioGroupBehavior</h3> 
+        <div class="radio_group toggle"> 
+          <p> 
+            <input checked="checked" class="radio" id="option_1" name="option" type="radio" value="1" /> 
+            <label class="radio" for="option_1">None</label> 
+          </p> 
+          <p> 
+            <input class="radio" id="option_2" name="option" rel="toggle[nine]" type="radio" value="2" /> 
+            <label class="radio" for="option_2">Expand One</label> 
+          </p> 
+          <div class="expand_me" id="nine">Expanded!</div> 
+          <p> 
+            <input class="radio" id="option_3" name="option" rel="toggle[ten,eleven]" type="radio" value="3" /> 
+            <label class="radio" for="option_3">Expand Two</label> 
+          </p> 
+          <div class="expand_me" id="ten">Expanded!</div> 
+          <div class="expand_me" id="eleven">Expanded!</div> 
+          <p> 
+            <input class="radio" id="option_4" name="option" rel="toggle[nine,ten,eleven]" type="radio" value="4" /> 
+            <label class="radio" for="option_4">Expand All</label> 
+          </p> 
+        </div> 
+      </fieldset> 
+      <fieldset> 
+        <h3>Toggle.SelectBehavior</h3> 
+        <p> 
+          <select class="toggle" id="select" name="select"> 
+            <option>&lt;select one&gt;</option> 
+            <option rel="toggle[twelve]" value="1">Option 1</option> 
+            <option rel="toggle[thirteen]" value="2">Option 2</option> 
+            <option rel="toggle[twelve,thirteen]" value="1,2">Both Options</option> 
+          </select> 
+        </p> 
+        <div class="expand_me" id="twelve">Expanded! Option 1 selected</div> 
+        <div class="expand_me" id="thirteen">Expanded! Option 2 selected</div> 
+      </fieldset> 
+    </form> 
+  </body> 
+</html>

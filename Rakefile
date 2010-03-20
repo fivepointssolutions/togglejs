@@ -1,6 +1,6 @@
 desc 'Launch the testing server on port 4000'
 task :demo do
-  `serve` # Requires http://github.com/jlong/serve
+  `open demo.html`
 end
 
 desc 'Remove the dist directory'

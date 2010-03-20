@@ -43,6 +43,7 @@
  * --------------------------------------------------------------------------
  * 
  * Copyright (c) 2007-2010, Five Points Solutions, Inc.
+ * Copyright (c) 2010, John W. Long
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -386,8 +387,6 @@ Toggle.SelectBehavior = Behavior.create({
     
     var optionElements = this.element.select('option');
     
-    // For some reason, this behavior needs to use IDs for the comparisons
-    // to work correctly.
     this.toggleWrapperIDs = $A();
     this.toggleWrapperIDsFor = {};
     

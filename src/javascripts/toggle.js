@@ -320,8 +320,6 @@ Toggle.SelectBehavior = Behavior.create({
     
     var optionElements = this.element.select('option');
     
-    // For some reason, this behavior needs to use IDs for the comparisons
-    // to work correctly.
     this.toggleWrapperIDs = $A();
     this.toggleWrapperIDsFor = {};
     
