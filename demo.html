@@ -64,6 +64,9 @@
           'a.toggle': Toggle.LinkBehavior(),
           'a.open': Toggle.LinkBehavior({
             effect: 'blind',
+            onLoad: function() {
+              this.toggle();
+            },
             beforeToggle: function(link) {
               link.innerHTML = (link.innerHTML == "Open") ? "Opening..." : "Closing...";
             },
