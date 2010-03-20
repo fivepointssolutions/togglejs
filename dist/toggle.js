@@ -40,6 +40,8 @@
  * Each of the included LowPro behaviors can be customized in various ways.
  * Check out the inline documentation for detailed usage information.
  * 
+ * Project Homepage: http://github.com/fivepointssolutions/togglejs
+ * 
  * --------------------------------------------------------------------------
  * 
  * Copyright (c) 2007-2010, Five Points Solutions, Inc.
