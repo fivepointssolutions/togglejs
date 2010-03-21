@@ -236,7 +236,7 @@ Toggle.LinkBehavior = Behavior.create({
     this.element.behavior = this; // a bit of a hack
     Toggle.addLink(this.toggleID, this.element);
     
-    this.onLoad();
+    this.onLoad(this.element);
   },
   
   onclick: function() {
