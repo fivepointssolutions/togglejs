@@ -8,16 +8,37 @@ task :clean do
   rm_rf 'dist'
 end
 
-desc 'Assemble files for distribution'
-task :dist => [:clean] do
-  mkpath 'dist'
-  readme = IO.read('README')
-  readme = "/*\n" + readme.split("\n").map { |line| " * #{line}" }.join("\n") + "\n *\n */\n\n"
-  togglejs = IO.read('src/javascripts/toggle.js')
-  open('dist/toggle.js', 'w') do |f|
-    f.write(readme + togglejs)
+file 'dist/toggle.js' => ['README', 'src/javascripts/toggle.js'] do |t|
+  target = t.name
+  unless uptodate?(target, t.prerequisites)
+    readme = IO.read(t.prerequisites.first)
+    readme = "/*\n" + readme.split("\n").map { |line| " * #{line}" }.join("\n") + "\n *\n */\n\n"
+    togglejs = IO.read(t.prerequisites.last)
+    open(target, 'w') do |f|
+      f.write(readme + togglejs)
+    end
   end
 end
+
+file 'dist/toggle.min.js' => 'src/javascripts/toggle.js' do |t|
+  gem 'jsmin'
+  require 'jsmin'
+  target = t.name
+  src = t.prerequisites.first
+  unless uptodate?(target, src)
+    togglejs = IO.read(src)
+    open(target, 'w') do |f|
+      f.write(JSMin.minify(togglejs).strip)
+    end
+  end
+end
+
+task 'mkdist' do
+  mkpath 'dist'
+end
+
+desc 'Assemble files for distribution'
+task :dist => [:clean, :mkdist, 'dist/toggle.js', 'dist/toggle.min.js']
 
 # This doesn't seem to be working at the moment.
 desc 'Build documentation from source'
