@@ -40,10 +40,9 @@ end
 desc 'Assemble files for distribution'
 task :dist => [:mkdist, 'dist/toggle.js', 'dist/toggle.min.js']
 
-# This doesn't seem to be working at the moment.
 desc 'Build documentation from source'
 task :doc do
-  gem 'treetop', '= 1.2.6'
+  gem 'treetop', '= 1.2.6' # PDoc seems to require this version right now
   gem 'pdoc', '0.2.0'
   require 'pdoc'
   rm_rf 'doc'
