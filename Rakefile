@@ -38,13 +38,13 @@ task 'mkdist' do
 end
 
 desc 'Assemble files for distribution'
-task :dist => [:clean, :mkdist, 'dist/toggle.js', 'dist/toggle.min.js']
+task :dist => [:mkdist, 'dist/toggle.js', 'dist/toggle.min.js']
 
 # This doesn't seem to be working at the moment.
 desc 'Build documentation from source'
 task :doc do
-  require 'rubygems'
-  gem 'pdoc'
+  gem 'treetop', '= 1.2.6'
+  gem 'pdoc', '0.2.0'
   require 'pdoc'
   rm_rf 'doc'
   mkpath 'doc'
@@ -53,7 +53,7 @@ task :doc do
   PDoc.run(
     :source_files => files,
     :destination => 'doc',
-    # :index_page => 'README.markdown',
+    :index_page => 'README',
     :syntax_highlighter => :pygments,
     :markdown_parser => :bluecloth
   )
