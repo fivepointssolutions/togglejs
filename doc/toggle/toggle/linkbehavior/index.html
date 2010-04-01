@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Prototype API documentation | Toggle.LinkBehavior</title>
+  <meta name="generator" content="PDoc" />
+  
+  <script type="text/javascript" src="../../../javascripts/prototype.js" charset="utf-8"></script>
+  <script type="text/javascript" src="../../../javascripts/application.js" charset="utf-8"></script>
+<script type="text/javascript" src="../../../javascripts/tabs.js" charset="utf-8"></script>
+  <script type="text/javascript" src="../../../javascripts/item_index.js" charset="utf-8"></script>
+  
+  <link type="text/css" rel="stylesheet" href="../../../stylesheets/api.css" charset="utf-8" media="screen, projection" />
+<link type="text/css" rel="stylesheet" href="../../../stylesheets/pygments.css" charset="utf-8" media="screen, projection" />
+  
+  <script type="text/javascript">
+    PDoc.pathPrefix = '../../../';
+  </script>
+</head>
+  <body>
+
+    <div id="sidebar">
+      <ul id="sidebar_tabs" class="sidebar-tabs">
+        <li>
+          <a href="#menu_pane">Menu</a>
+        </li>
+        <li>
+          <a href="#search_pane">Search</a>
+        </li>
+      </ul> <!-- .sidebar-tabs -->
+
+      <form class="search-ribbon">
+        <label>
+          <span class="hidden">Search</span>
+          <input type="text" id="search" size="20" title="Search" />
+        </label>
+      </form>
+      
+      <div class="sidebar-pane scrollable" id="menu_pane">
+        <ul id="api_menu" class="menu-items">
+          
+            <li><div class="menu-item"><a title="Toggle section (section)" class="section current-parent" href="../../../toggle/">Toggle section</a></div><ul class="menu-section"><li><div class="menu-item"><a title="Toggle (namespace)" class="namespace current-parent" href="../../../toggle/toggle/">Toggle</a></div><ul class=""><li><div class="menu-item"><a title="Toggle.CheckboxBehavior (class)" class="class" href="../../../toggle/toggle/checkboxbehavior/">Toggle.CheckboxBehavior</a></div></li>
+<li><div class="menu-item"><a title="Toggle.LinkBehavior (class)" class="class current" href="../../../toggle/toggle/linkbehavior/">Toggle.LinkBehavior</a></div><ul></ul></li>
+<li><div class="menu-item"><a title="Toggle.RadioGroupBehavior (class)" class="class" href="../../../toggle/toggle/radiogroupbehavior/">Toggle.RadioGroupBehavior</a></div></li>
+<li><div class="menu-item"><a title="Toggle.SelectBehavior (class)" class="class" href="../../../toggle/toggle/selectbehavior/">Toggle.SelectBehavior</a></div></li></ul></li></ul></li>
+          
+        </ul> <!--- #api_menu =-->
+      </div> <!-- .sidebar-pane -->
+      <div class="sidebar-pane" id="search_pane">
+        <ul id="search_results" class="search-results menu-items scrollable"></ul>
+      </div> <!-- .sidebar-pane -->
+    </div> <!-- #sidebar -->
+
+    <div id="page">
+      
+
+      <div id="main" class="page-content">
+        
+
+
+
+
+
+<ul class="breadcrumbs clearfix">
+  <li><a href="../../../">Home</a></li>
+  
+    <li>&rarr; <a title="Toggle section (section)" href="../../../toggle/">Toggle section</a></li>
+  
+    <li>&rarr; <a title="Toggle (namespace)" href="../../../toggle/toggle/">Toggle</a></li>
+  
+    <li>&rarr; <a title="Toggle.LinkBehavior (class)" href="../../../toggle/toggle/linkbehavior/">LinkBehavior</a></li>
+  
+</ul>
+
+<h2 class="page-title">
+  
+    <span class="type">class</span> Toggle.LinkBehavior
+  
+</h2>
+
+
+
+                <div class="section section-description">
+                <div class="section-title">
+                  <h3>Description</h3>
+                </div> <!-- .section-title -->
+                <div class="section-content">
+
+    <p>Allows a link to toggle the display of another element or array of
+elements on and off. Just set the <tt>rel</tt> attribute to
+"toggle[id1,id2,...]" on the link and the href of the link to the
+ID of the first element ("#id1").</p>
+
+<p>Options</p>
+
+<ul>
+<li>effect: This option specifies the effect that should be used when
+toggling. The default is "slide", but it can also be set to
+"blind", "appear", or "none".</li>
+<li>onLoad: Called after the behavior is initialized. The function is
+automatically bound to the behavior (so "this" referes to the
+behavior).</li>
+<li>beforeToggle: Called after the link is clicked, but before the effect is
+started. The link is passed as the first parameter and the
+function is automatically bound to the behavior (so "this"
+refers to the behavior).</li>
+<li>afterToggle: Called after the effect is complete. The link is passed as
+the first parameter and the function is automatically bound
+to the behavior (so "this" refers to the behavior).</li>
+</ul>
+                </div> <!-- .section-content -->
+            </div> <!-- .section -->
+
+
+
+
+
+
+
+  
+
+  
+
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+
+
+
+
+
+      </div> <!-- #main -->
+      
+      <div id="footer">
+        <div class="content clearfix">
+          
+          <div class="cc clearfix">
+            <span>
+              <img src="http://creativecommons.org/images/public/somerights20.png"
+                style="border-width: 0pt;" alt="Creative Commons License"/>              
+            </span>
+            
+            <p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0 Unported License</a>.</p>
+          </div> <!-- .cc -->
+          
+          <div class="credits">
+            Generated by <a href="http://pdoc.org">PDoc</a>. Uses <a href="http://famfamfam.com/lab/icons/silk/" title="famfamfam.com: Silk Icons">Silk Icons</a> and portions of <a href="http://github.com/280north/aristo/tree/master" title="280north's aristo at master - GitHub">Aristo</a>.
+          </div> <!-- .credits -->
+          
+        </div> <!-- .content -->
+      </div> <!-- #footer -->
+
+    </div> <!-- #page -->
+  </body>
+</html>

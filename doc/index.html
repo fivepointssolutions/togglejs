@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Prototype API documentation | Home</title>
+  <meta name="generator" content="PDoc" />
+  
+  <script type="text/javascript" src="javascripts/prototype.js" charset="utf-8"></script>
+  <script type="text/javascript" src="javascripts/application.js" charset="utf-8"></script>
+<script type="text/javascript" src="javascripts/tabs.js" charset="utf-8"></script>
+  <script type="text/javascript" src="javascripts/item_index.js" charset="utf-8"></script>
+  
+  <link type="text/css" rel="stylesheet" href="stylesheets/api.css" charset="utf-8" media="screen, projection" />
+<link type="text/css" rel="stylesheet" href="stylesheets/pygments.css" charset="utf-8" media="screen, projection" />
+  
+  <script type="text/javascript">
+    PDoc.pathPrefix = '';
+  </script>
+</head>
+  <body>
+
+    <div id="sidebar">
+      <ul id="sidebar_tabs" class="sidebar-tabs">
+        <li>
+          <a href="#menu_pane">Menu</a>
+        </li>
+        <li>
+          <a href="#search_pane">Search</a>
+        </li>
+      </ul> <!-- .sidebar-tabs -->
+
+      <form class="search-ribbon">
+        <label>
+          <span class="hidden">Search</span>
+          <input type="text" id="search" size="20" title="Search" />
+        </label>
+      </form>
+      
+      <div class="sidebar-pane scrollable" id="menu_pane">
+        <ul id="api_menu" class="menu-items">
+          
+            <li><div class="menu-item"><a title="Toggle section (section)" class="section" href="toggle/">Toggle section</a></div><ul class="menu-section"><li><div class="menu-item"><a title="Toggle (namespace)" class="namespace" href="toggle/toggle/">Toggle</a></div><ul class=""><li><div class="menu-item"><a title="Toggle.CheckboxBehavior (class)" class="class" href="toggle/toggle/checkboxbehavior/">Toggle.CheckboxBehavior</a></div></li>
+<li><div class="menu-item"><a title="Toggle.LinkBehavior (class)" class="class" href="toggle/toggle/linkbehavior/">Toggle.LinkBehavior</a></div></li>
+<li><div class="menu-item"><a title="Toggle.RadioGroupBehavior (class)" class="class" href="toggle/toggle/radiogroupbehavior/">Toggle.RadioGroupBehavior</a></div></li>
+<li><div class="menu-item"><a title="Toggle.SelectBehavior (class)" class="class" href="toggle/toggle/selectbehavior/">Toggle.SelectBehavior</a></div></li></ul></li></ul></li>
+          
+        </ul> <!--- #api_menu =-->
+      </div> <!-- .sidebar-pane -->
+      <div class="sidebar-pane" id="search_pane">
+        <ul id="search_results" class="search-results menu-items scrollable"></ul>
+      </div> <!-- .sidebar-pane -->
+    </div> <!-- #sidebar -->
+
+    <div id="page">
+      
+      <div class="masthead">
+        <div class="content">
+          <h1 class="logo">
+            <a href="http://prototypejs.org"><span class="replaced">Prototype JavaScript framework</span></a>
+          </h1>
+        </div> <!-- .content -->
+      </div> <!-- .masthead -->
+      
+
+      <div id="main" class="page-content">
+        
+
+<div class="page-introduction">
+  <p>toggle.js</p>
+
+<p>dependencies: prototype.js, lowpro.js, effect.js</p>
+
+<hr/>
+
+<p>A LowPro and Prototype-based library with a collection of behaviors for
+unobtrusively toggling the visibility of other elements via links,
+checkboxes, radio buttons, and selects.</p>
+
+<p>To use you will need to install the following LowPro behaviors. If you are 
+using Rails, put this in "application.js":</p>
+
+<p>Event.addBehavior({
+    'a.toggle': Toggle.LinkBehavior(),
+    'input.checkbox.toggle': Toggle.CheckboxBehavior(),
+    'div.radio_group.toggle': Toggle.RadioGroupBehavior(),
+    'select.toggle': Toggle.SelectBehavior()
+  });</p>
+
+<p>Once the hooks are installed correctly, you should add a "rel" attribute
+to each element that you want to use as a toggle trigger. Set the value
+of the "rel" attribute to "toggle[id]" where id is equal to the ID of
+the element that you want to toggle. You can toggle multiple elements by 
+separating the IDs with commas (like this: "toggle[id1,id2,id3]").</p>
+
+<p>For example, a link with a class of "toggle":</p>
+
+<p><a class="toggle" href="#more" rel="toggle[more]">More</a></p>
+
+<p>will become a trigger for a div with an ID of "more". Checkboxes work in
+the exact same manner. To use with a group of radio buttons, make sure
+that all of the radio buttons are inside of a div with a class of
+"radio_group toggle". Then set the "rel" attribute on each radio button
+that should act as a toggle trigger. Selects work in a similar manner,
+but the "rel" attribute should be set on each option element that should
+toggle the visibility of an element or array of elements.</p>
+
+<p>Each of the included LowPro behaviors can be customized in various ways.
+Check out the inline documentation for detailed usage information.</p>
+
+<p>Project Homepage: http://github.com/fivepointssolutions/togglejs</p>
+
+<hr/>
+
+<p>Copyright (c) 2007-2010, Five Points Solutions, Inc.
+Copyright (c) 2010, John W. Long</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.</p>
+</div> <!-- .section -->
+
+              <div class="section section-sections">
+                <div class="section-title">
+                  <h3>Sections</h3>
+                </div> <!-- .section-title -->
+                <div class="section-content">
+
+  <ul class="section-list">
+    
+    <li>
+      <h4>
+        <a href="toggle/">Toggle</a>
+      </h4>
+      <p><p>Hello world!</p></p>
+    </li>      
+    
+  </ul>
+              </div> <!-- .section-content -->
+            </div> <!-- .section -->
+
+      </div> <!-- #main -->
+      
+      <div id="footer">
+        <div class="content clearfix">
+          
+          <div class="cc clearfix">
+            <span>
+              <img src="http://creativecommons.org/images/public/somerights20.png"
+                style="border-width: 0pt;" alt="Creative Commons License"/>              
+            </span>
+            
+            <p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-Share Alike 3.0 Unported License</a>.</p>
+          </div> <!-- .cc -->
+          
+          <div class="credits">
+            Generated by <a href="http://pdoc.org">PDoc</a>. Uses <a href="http://famfamfam.com/lab/icons/silk/" title="famfamfam.com: Silk Icons">Silk Icons</a> and portions of <a href="http://github.com/280north/aristo/tree/master" title="280north's aristo at master - GitHub">Aristo</a>.
+          </div> <!-- .credits -->
+          
+        </div> <!-- .content -->
+      </div> <!-- #footer -->
+
+    </div> <!-- #page -->
+  </body>
+</html>

@@ -67,6 +67,16 @@
  *
  */
 
+/**
+ *  == Toggle ==
+ *  
+ *  Hello world!
+ *  
+ **/
+
+/** section: Toggle
+ *  Toggle
+ **/
 var Toggle = {
   
   DefaultEffect: 'slide',
@@ -109,7 +119,7 @@ var Toggle = {
   },
   
   /**
-   *  Toggle.toggle(elements, effect, options)
+   *  Toggle.toggle(elements, effect, options) -> null
    *  
    *  Utility function. Toggles an element or array of elements with effect
    *  and options. Similar to `Effect.toggle()`, but works with multiple
@@ -147,7 +157,7 @@ var Toggle = {
   },
   
   /**
-   *  Toggle.show(elements, effect, options)
+   *  Toggle.show(elements, effect, options) -> null
    *  
    *  Utility function. Shows an element or array of elements with effect
    *  and options.
@@ -160,7 +170,7 @@ var Toggle = {
   },
   
   /**
-   *  Toggle.hide(elements, effect, options)
+   *  Toggle.hide(elements, effect, options) -> null
    *  
    *  Utility function. Hides an element or array of elements with effect
    *  and options.
@@ -173,7 +183,7 @@ var Toggle = {
   },
   
   /**
-   *  Toggle.wrapElement(element)
+   *  Toggle.wrapElement(element) -> Element
    *  
    *  Utility function. Wraps element with a div of class "toggle_wrapper"
    *  unless one already exists. Returns the "toggle_wrapper" for given
@@ -407,7 +417,7 @@ Toggle.SelectBehavior = Behavior.create({
       this.toggleWrapperIDs.push(wrapperIDs);
     }.bind(this));
     
-    this.toggleWrapperIDs = this.toggleWrapperIDs.flatten().uniq()
+    this.toggleWrapperIDs = this.toggleWrapperIDs.flatten().uniq();
     
     this.effect = "none";
     this.toggle();
