@@ -1,13 +1,11 @@
 /**
- *  == Toggle ==
- *  
- *  Hello world!
- *  
- **/
+ * == Toggle ==
+ * 
+**/
 
 /** section: Toggle
  *  Toggle
- **/
+**/
 var Toggle = {
   
   DefaultEffect: 'slide',
@@ -159,6 +157,16 @@ Toggle.LinkBehavior = Behavior.create({
   initialize: function(options) {
     var options = options || {};
     
+    var elements = Toggle.extractToggleObjects(this.element.readAttribute('rel'));
+    this.toggleWrappers = elements.map(function(e) { return Toggle.wrapElement(e) });
+    
+    this.invert = options.invert || false;
+    
+    if (this.invert) {
+      this.effect = 'none';
+      this.toggle();
+    }
+    
     this.effect = options.effect || Toggle.DefaultEffect;
     
     this.onLoad = options.onLoad || Prototype.emptyFunction;
@@ -169,9 +177,6 @@ Toggle.LinkBehavior = Behavior.create({
     
     this.afterToggle = options.afterToggle || Prototype.emptyFunction;
     this.afterToggle.bind(this);
-    
-    var elements = Toggle.extractToggleObjects(this.element.readAttribute('rel'));
-    this.toggleWrappers = elements.map(function(e) { return Toggle.wrapElement(e) });
     
     this.toggleID = Toggle.extractAnchor(this.element.href);
     this.element.behavior = this; // a bit of a hack
@@ -190,8 +195,8 @@ Toggle.LinkBehavior = Behavior.create({
       this.toggleWrappers,
       this.effect,
       {
-        beforeStart: function() { this.beforeToggle(this.element) }.bind(this),
-        afterFinish: function() { this.afterToggle(this.element) }.bind(this)
+        beforeStart: function() { if (this.beforeToggle) this.beforeToggle(this.element) }.bind(this),
+        afterFinish: function() { if (this.afterToggle) this.afterToggle(this.element) }.bind(this)
       }
     );
   }

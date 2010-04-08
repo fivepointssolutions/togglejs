@@ -1,36 +1,42 @@
 /*
- * toggle.js
+ * ToggleJS
+ * ========
  * 
- * dependencies: prototype.js, lowpro.js, effect.js
+ * ToggleJS is a LowPro and Prototype-based library with a collection of 
+ * behaviors for unobtrusively toggling the visibility of other elements via 
+ * links, checkboxes, radio buttons, and selects.
  * 
+ * Dependencies: prototype.js, lowpro.js, effect.js
+ * 
+ * Homepage: <http://github.com/fivepointssolutions/togglejs>
+ * 
+ * 
+ * Using ToggleJS
  * --------------------------------------------------------------------------
  * 
- * A LowPro and Prototype-based library with a collection of behaviors for
- * unobtrusively toggling the visibility of other elements via links,
- * checkboxes, radio buttons, and selects.
+ * To use ToggleJS you will need to have Prototype and LowPro installed and 
+ * loaded, and the following LowPro behaviors will need to be configured. If 
+ * you are using Rails, put this in "application.js":
  * 
- * To use you will need to install the following LowPro behaviors. If you are 
- * using Rails, put this in "application.js":
+ *     Event.addBehavior({
+ *       'a.toggle': Toggle.LinkBehavior(),
+ *       'input[type=checkbox].toggle': Toggle.CheckboxBehavior(),
+ *       'div.radio_group.toggle': Toggle.RadioGroupBehavior(),
+ *       'select.toggle': Toggle.SelectBehavior()
+ *     });
  * 
- *   Event.addBehavior({
- *     'a.toggle': Toggle.LinkBehavior(),
- *     'input.checkbox.toggle': Toggle.CheckboxBehavior(),
- *     'div.radio_group.toggle': Toggle.RadioGroupBehavior(),
- *     'select.toggle': Toggle.SelectBehavior()
- *   });
- * 
- * Once the hooks are installed correctly, you should add a "rel" attribute
+ * Once the hooks are installed correctly, you should add a `rel` attribute
  * to each element that you want to use as a toggle trigger. Set the value
- * of the "rel" attribute to "toggle[id]" where id is equal to the ID of
+ * of the `rel` attribute to "toggle[id]" where id is equal to the ID of
  * the element that you want to toggle. You can toggle multiple elements by 
  * separating the IDs with commas (like this: "toggle[id1,id2,id3]").
  * 
  * For example, a link with a class of "toggle":
  * 
- *   <a class="toggle" href="#more" rel="toggle[more]">More</a>
+ *     <a class="toggle" href="#more" rel="toggle[more]">More</a>
  * 
- * will become a trigger for a div with an ID of "more". Checkboxes work in
- * the exact same manner. To use with a group of radio buttons, make sure
+ * ...will become a trigger for a div with an ID of "more". Checkboxes work
+ * in the exact same manner. To use with a group of radio buttons, make sure
  * that all of the radio buttons are inside of a div with a class of
  * "radio_group toggle". Then set the "rel" attribute on each radio button
  * that should act as a toggle trigger. Selects work in a similar manner,
@@ -40,11 +46,11 @@
  * Each of the included LowPro behaviors can be customized in various ways.
  * Check out the inline documentation for detailed usage information.
  * 
- * Project Homepage: http://github.com/fivepointssolutions/togglejs
  * 
+ * License and Copyright
  * --------------------------------------------------------------------------
  * 
- * Copyright (c) 2007-2010, Five Points Solutions, Inc.
+ * Copyright (c) 2007-2010, Five Points Solutions, Inc.  
  * Copyright (c) 2010, John W. Long
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a
@@ -68,15 +74,13 @@
  */
 
 /**
- *  == Toggle ==
- *  
- *  Hello world!
- *  
- **/
+ * == Toggle ==
+ * 
+**/
 
 /** section: Toggle
  *  Toggle
- **/
+**/
 var Toggle = {
   
   DefaultEffect: 'slide',
@@ -228,6 +232,16 @@ Toggle.LinkBehavior = Behavior.create({
   initialize: function(options) {
     var options = options || {};
     
+    var elements = Toggle.extractToggleObjects(this.element.readAttribute('rel'));
+    this.toggleWrappers = elements.map(function(e) { return Toggle.wrapElement(e) });
+    
+    this.invert = options.invert || false;
+    
+    if (this.invert) {
+      this.effect = 'none';
+      this.toggle();
+    }
+    
     this.effect = options.effect || Toggle.DefaultEffect;
     
     this.onLoad = options.onLoad || Prototype.emptyFunction;
@@ -238,9 +252,6 @@ Toggle.LinkBehavior = Behavior.create({
     
     this.afterToggle = options.afterToggle || Prototype.emptyFunction;
     this.afterToggle.bind(this);
-    
-    var elements = Toggle.extractToggleObjects(this.element.readAttribute('rel'));
-    this.toggleWrappers = elements.map(function(e) { return Toggle.wrapElement(e) });
     
     this.toggleID = Toggle.extractAnchor(this.element.href);
     this.element.behavior = this; // a bit of a hack
@@ -259,8 +270,8 @@ Toggle.LinkBehavior = Behavior.create({
       this.toggleWrappers,
       this.effect,
       {
-        beforeStart: function() { this.beforeToggle(this.element) }.bind(this),
-        afterFinish: function() { this.afterToggle(this.element) }.bind(this)
+        beforeStart: function() { if (this.beforeToggle) this.beforeToggle(this.element) }.bind(this),
+        afterFinish: function() { if (this.afterToggle) this.afterToggle(this.element) }.bind(this)
       }
     );
   }

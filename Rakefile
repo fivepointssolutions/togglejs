@@ -1,4 +1,4 @@
-desc 'Launch the testing server on port 4000'
+desc 'Open the demo document in the default web browser'
 task :demo do
   `open demo.html`
 end
@@ -8,7 +8,7 @@ task :clean do
   rm_rf 'dist'
 end
 
-file 'dist/toggle.js' => ['README', 'src/javascripts/toggle.js'] do |t|
+file 'dist/toggle.js' => ['README.markdown', 'src/javascripts/toggle.js'] do |t|
   target = t.name
   unless uptodate?(target, t.prerequisites)
     readme = IO.read(t.prerequisites.first)
@@ -41,18 +41,18 @@ desc 'Assemble files for distribution'
 task :dist => [:mkdist, 'dist/toggle.js', 'dist/toggle.min.js']
 
 desc 'Build documentation from source'
-task :doc do
+task :doc => :dist do
   gem 'treetop', '= 1.2.6' # PDoc seems to require this version right now
   gem 'pdoc', '0.2.0'
   require 'pdoc'
   rm_rf 'doc'
   mkpath 'doc'
-  files = FileList['src/javascripts/*.js']
-  files.exclude('prototype.js', 'effects.js', 'lowpro.js')
+  files = FileList['dist/*.js']
+  files.exclude('toggle.min.js')
   PDoc.run(
     :source_files => files,
     :destination => 'doc',
-    :index_page => 'README',
+    :index_page => 'README.markdown',
     :syntax_highlighter => :pygments,
     :markdown_parser => :bluecloth
   )

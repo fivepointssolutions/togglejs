@@ -67,38 +67,43 @@
         
 
 <div class="page-introduction">
-  <p>toggle.js</p>
+  <h1>ToggleJS</h1>
 
-<p>dependencies: prototype.js, lowpro.js, effect.js</p>
+<p>ToggleJS is a LowPro and Prototype-based library with a collection of 
+behaviors for unobtrusively toggling the visibility of other elements via 
+links, checkboxes, radio buttons, and selects.</p>
 
-<hr/>
+<p>Dependencies: prototype.js, lowpro.js, effect.js</p>
 
-<p>A LowPro and Prototype-based library with a collection of behaviors for
-unobtrusively toggling the visibility of other elements via links,
-checkboxes, radio buttons, and selects.</p>
+<p>Homepage: <a href="http://github.com/fivepointssolutions/togglejs">http://github.com/fivepointssolutions/togglejs</a></p>
 
-<p>To use you will need to install the following LowPro behaviors. If you are 
-using Rails, put this in "application.js":</p>
+<h2>Using ToggleJS</h2>
 
-<p>Event.addBehavior({
-    'a.toggle': Toggle.LinkBehavior(),
-    'input.checkbox.toggle': Toggle.CheckboxBehavior(),
-    'div.radio_group.toggle': Toggle.RadioGroupBehavior(),
-    'select.toggle': Toggle.SelectBehavior()
-  });</p>
+<p>To use ToggleJS you will need to have Prototype and LowPro installed and 
+loaded, and the following LowPro behaviors will need to be configured. If 
+you are using Rails, put this in "application.js":</p>
 
-<p>Once the hooks are installed correctly, you should add a "rel" attribute
+<div class="highlight"><pre><span class="nx">Event</span><span class="p">.</span><span class="nx">addBehavior</span><span class="p">({</span>
+  <span class="s1">&#39;a.toggle&#39;</span><span class="o">:</span> <span class="nx">Toggle</span><span class="p">.</span><span class="nx">LinkBehavior</span><span class="p">(),</span>
+  <span class="s1">&#39;input[type=checkbox].toggle&#39;</span><span class="o">:</span> <span class="nx">Toggle</span><span class="p">.</span><span class="nx">CheckboxBehavior</span><span class="p">(),</span>
+  <span class="s1">&#39;div.radio_group.toggle&#39;</span><span class="o">:</span> <span class="nx">Toggle</span><span class="p">.</span><span class="nx">RadioGroupBehavior</span><span class="p">(),</span>
+  <span class="s1">&#39;select.toggle&#39;</span><span class="o">:</span> <span class="nx">Toggle</span><span class="p">.</span><span class="nx">SelectBehavior</span><span class="p">()</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>Once the hooks are installed correctly, you should add a <code>rel</code> attribute
 to each element that you want to use as a toggle trigger. Set the value
-of the "rel" attribute to "toggle[id]" where id is equal to the ID of
+of the <code>rel</code> attribute to "toggle[id]" where id is equal to the ID of
 the element that you want to toggle. You can toggle multiple elements by 
 separating the IDs with commas (like this: "toggle[id1,id2,id3]").</p>
 
 <p>For example, a link with a class of "toggle":</p>
 
-<p><a class="toggle" href="#more" rel="toggle[more]">More</a></p>
+<div class="highlight"><pre><span class="o">&lt;</span><span class="nx">a</span> <span class="kr">class</span><span class="o">=</span><span class="s2">&quot;toggle&quot;</span> <span class="nx">href</span><span class="o">=</span><span class="s2">&quot;#more&quot;</span> <span class="nx">rel</span><span class="o">=</span><span class="s2">&quot;toggle[more]&quot;</span><span class="o">&gt;</span><span class="nx">More</span><span class="o">&lt;</span><span class="err">/a&gt;</span>
+</pre></div>
 
-<p>will become a trigger for a div with an ID of "more". Checkboxes work in
-the exact same manner. To use with a group of radio buttons, make sure
+<p>...will become a trigger for a div with an ID of "more". Checkboxes work
+in the exact same manner. To use with a group of radio buttons, make sure
 that all of the radio buttons are inside of a div with a class of
 "radio_group toggle". Then set the "rel" attribute on each radio button
 that should act as a toggle trigger. Selects work in a similar manner,
@@ -108,11 +113,9 @@ toggle the visibility of an element or array of elements.</p>
 <p>Each of the included LowPro behaviors can be customized in various ways.
 Check out the inline documentation for detailed usage information.</p>
 
-<p>Project Homepage: http://github.com/fivepointssolutions/togglejs</p>
+<h2>License and Copyright</h2>
 
-<hr/>
-
-<p>Copyright (c) 2007-2010, Five Points Solutions, Inc.
+<p>Copyright (c) 2007-2010, Five Points Solutions, Inc.<br/>
 Copyright (c) 2010, John W. Long</p>
 
 <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -146,7 +149,7 @@ DEALINGS IN THE SOFTWARE.</p>
       <h4>
         <a href="toggle/">Toggle</a>
       </h4>
-      <p><p>Hello world!</p></p>
+      <p></p>
     </li>      
     
   </ul>
